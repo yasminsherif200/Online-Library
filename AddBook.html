@@ -1,45 +1,37 @@
-<!doctype html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <title>AddBook</title>
+    <meta charset="UTF-8">
+    <title>Add Book</title>
 </head>
 <body>
- <nav>
+    <nav>
         <a href="index.html">Home</a> | 
         <a href="signup.html">Sign Up</a> |
-        <a href="login.html">Login</a> |
-        <a href="Admin-Dashboard.html">Admin Dashboard</a> |
-        <a href="AddBook.html">Add New Book</a> |   
+        <a href="login.html">Login</a>  
     </nav>
     <hr>
-  <h3>Add New Book :</h3>
-  <form action="" target="_self" method="post">
-    <label for="Book ID">Book ID : </label>
-    <br />
-    <input type="Book Id " name="Book ID " id="Book ID" />
-    <br/>
-    <br />
-    <label for="Book Name ">Book Name : </label>
-    <br />
-    <input type="text" name="Book Name"/>
-    <br />
-     <br />
-    <label for="Author"> Author :</label> 
-    </br>
-    <input Type="text" name="Author"/>
-    </br>
-     <br />
-    <label for="Category ">Category : </label>
-    </br>
-    <input type="text" name="Category"/>
-    </br>
-     <br />
-    <label for=" ">Description : </label>
-    </br>
-    <input type="text" name="Description"/>
-     <br />
-      <br />
-  </form>  
-      <form action="Admin-Dashboard.html" method="get">
-      <input type="submit" value="Save Book and Return" />
-      </form>
+    
+    <h3>Add New Book:</h3>
+    
+    <form action="Admin-Dashboard.html" method="POST">
+        
+        <label for="book_id">Book ID:</label><br />
+        <input type="text" name="book_id" id="book_id" required /><br /><br />
+
+        <label for="book_name">Book Name:</label><br />
+        <input type="text" name="book_name" id="book_name" required /><br /><br />
+
+        <label for="author">Author:</label><br />
+        <input type="text" name="author" id="author" /><br /><br />
+
+        <label for="category">Category:</label><br />
+        <input type="text" name="category" id="category" /><br /><br />
+
+        <label for="description">Description:</label><br />
+        <textarea name="description" id="description" rows="4"></textarea><br /><br />
+
+        <input type="submit" value="Save Book and Return" />
+    </form>
 </body>
+</html>
