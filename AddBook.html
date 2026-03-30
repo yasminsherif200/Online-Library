@@ -1,37 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Add Book</title>
+  <meta charset="UTF-8">
+  <title> Add Book </title>
+  <Link rel="stylesheet" href="AddBook.css" />
 </head>
+
 <body>
-    <nav>
-      <a href="index.html">Home</a> | 
-      <a href="Admin-Dashboard.html">Admin-Dashboard</a> | 
-      <a href="AddBook.html">Add New Book</a> | 
-      <a href="BookList.html">Books</a> | 
-      <a href="Books-Management.html">Books Management</a> | 
-      <a href="Edit-Book.html">Edit Books</a> | 
-    </nav>
-    <hr>
-  <h1>Add New Book :</h1>
-  <form action="Admin-Dashboard.html" target="_self" method="get">
+  <nav>
+    <a href="index.html">HOME</a>
+    <a href="AdminDashboard.html">ADMIN DASHBOARD</a>
+    <a href="BookList.html">BOOK LIST</a>
+    <a href="Books-Management.html"> MANAGEMENT </a>
+    <a href="Edit-Book.html"> EDIT BOOK </a>
+  </nav>
+
+  <hr>
+  <h1> Add Book :</h1>
+  <form action="AdminDashboard.html" target="_self" method="get">
     <label for="book_id">Book ID:</label><br />
-        <input type="number" name="book_id" id="book_id" required /><br /><br />
+    <input type="number" name="book_id" id="book_id" required /><br /><br />
 
-        <label for="book_name">Book Name:</label><br />
-        <input type="text" name="book_name" id="book_name" required /><br /><br />
+    <label for="book_name">Book Name:</label><br />
+    <input type="text" name="book_name" id="book_name" required /><br /><br />
 
-        <label for="author">Author:</label><br />
-        <input type="text" name="author" id="author" /><br /><br />
+    <label for="author">Author:</label><br />
+    <input type="text" name="author" id="author" /><br /><br />
 
-        <label for="category">Category:</label><br />
-        <input type="text" name="category" id="category" /><br /><br />
+    <label for="category">Category:</label><br />
+    <input type="text" name="category" id="category" /><br /><br />
 
-        <label for="description">Description:</label><br />
-        <textarea name="description" id="description" rows="4"></textarea><br /><br />
+    <label for="description">Description:</label><br />
+    <textarea name="description" id="description" rows="4"></textarea><br /><br />
+    <label>Upload Digital Cover Scan</label>
 
-        <input type="submit" value="Save Book and Return" />
-  </form>  
+    <div class="upload-box">
+      <input type="file" id="book_cover" name="book_cover" accept="image/*" hidden>
+
+      <label for="book_cover" class="upload-label">
+        <span class="icon">📄</span>
+        <p>Upload Digital Cover Scan</p>
+        <small>PNG, JPG up to 10MB</small>
+      </label>
+    </div>
+
+    <input type="submit" value="Save Book and Return" />
+
+  </form>
+
 </body>
+
 </html>
