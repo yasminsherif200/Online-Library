@@ -4,20 +4,231 @@
     <meta charset="UTF-8" />
     <title>Online Library website</title>
     <meta name="description" content="Online library to search and borrow books">
+    <link rel="stylesheet" href="css/index.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
     <nav>
-      <a href="index.html">Home</a> | 
-      <a href="signup.html" target="_blank">Sign Up</a> |
-      <a href="login.html" target="_blank">Login</a> |
+        <h3>The Digital Archivist</h3>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="BookDetails.html">books</a></li>
+            <li><a href="#">about</a></li>
+        </ul>
+
+        <div>
+            <a href="login.html" class="login">login</a>
+            <a href="signup.html" class="sign">sign up</a>
+        </div>
     </nav>
-    <hr>
-    <h1>Online Library </h1>
-    <p>
-        Welcome to our Online Library.
-    </p>
-    <p>
-        You can read and borrow books easily.
-    </p>
-   </body>
+    <div class="main">
+        <div class="bg"></div>
+        <h1>
+            Welcome to our
+            <br />
+            <em>Online Library.</em>
+        </h1>
+        <p>You can read and borrow books easily. Immerse yourself in a curated sanctuary of human thought and discovery.</p>
+
+        <form class="search" action="Search-Books.html" method="get">
+            <input type="text" name="query" placeholder="Search by title, author, or ISBN..." />
+            <button type="submit">Explore</button>
+        </form>
+
+
+        <div class="stats">
+            <div>
+                <div class="n">120k+</div>
+                <div class="label">Manuscripts </div>
+            </div>
+
+            <div>
+                <div class="n">45k</div>
+                <div class="label">Scholars</div>
+            </div>
+        </div>
+    </div>
+
+    <section class="sec">
+        <div class="header">
+            <h2>New Arrivals</h2>
+            <a href="BookDetails.html">Browse all →</a>
+        </div>
+
+        <div>
+            <div class="books">
+                <div class="books-scrol" id="booksScroll">
+
+                    <div class="book-card">
+                        <div class="popup">
+                            <h3>Echoes of Time</h3>
+                            <p>A journey through memory and forgotten civilisations across three centuries.</p>
+                            <div class="popup-cover">
+                                <img src="imgs/book1.png" alt="Echoes of Time" />
+                            </div>
+                            <a href="BookDetails.html" class="btn-read">Start Reading</a>
+                        </div>
+
+                        <div class="cover">
+                            <img src="imgs/book1.png" alt="Echoes of Time" />
+                        </div>
+                        <div class="small-info">
+                            <h4>Echoes of Time</h4>
+                            <author>Evelyn St. Claire</author>
+                        </div>
+                    </div>
+
+                    <div class="book-card">
+                        <div class="popup">
+                            <h3>The Silent Verse</h3>
+                            <p>A poetic exploration of silence, identity and the spaces between words.</p>
+                            <div class="popup-cover">
+                                <img src="imgs/book2.png" alt="The Silent Verse" />
+                            </div>
+                            <a href="BookDetails.html" class="btn-read">Start Reading</a>
+                        </div>
+                        <div class="cover">
+                            <img src="imgs/book2.png" alt="The Silent Verse" />
+                        </div>
+                        <div class="small-info">
+                            <h4>The Silent Verse</h4>
+                            <author>Marcus Vane</author>
+                        </div>
+                    </div>
+
+                    <div class="book-card">
+                        <div class="popup">
+                            <h3>Oceans Within</h3>
+                            <p>A deep dive into marine biology and the mysteries of the deep sea.</p>
+                            <div class="popup-cover">
+                                <img src="imgs/book4.png" alt="Oceans Within" />
+                            </div>
+                            <a href="BookDetails.html" class="btn-read">Start Reading</a>
+                        </div>
+                        <div class="cover">
+                            <img src="imgs/book4.png" alt="Oceans Within" />
+                        </div>
+                        <div class="small-info">
+                            <h4>Oceans Within</h4>
+                            <author>Sarah Waters</author>
+                        </div>
+                    </div>
+
+                    <div class="book-card">
+                        <div class="popup">
+                            <h3>Peak Wisdom</h3>
+                            <p>Lessons from the world's highest mountains and the climbers who conquered them.</p>
+                            <div class="popup-cover">
+                                <img src="imgs/book5.png" alt="Peak Wisdom" />
+                            </div>
+                            <a href="BookDetails.html" class="btn-read">Start Reading</a>
+                        </div>
+                        <div class="cover">
+                            <img src="imgs/book5.png" alt="Peak Wisdom" />
+                        </div>
+                        <div class="small-info">
+                            <h4>Peak Wisdom</h4>
+                            <author>Julian Frost</author>
+                        </div>
+                    </div>
+
+                    <div class="book-card">
+                        <div class="popup">
+                            <h3>The Lost Meridian</h3>
+                            <p>An adventure across uncharted lands in search of a forgotten empire.</p>
+                            <div class="popup-cover">
+                                <img src="imgs/book3.png" alt="The Lost Meridian" />
+                            </div>
+                            <a href="BookDetails.html" class="btn-read">Start Reading</a>
+                        </div>
+                        <div class="cover">
+                            <img src="imgs/book3.png" alt="The Lost Meridian" />
+                        </div>
+                        <div class="small-info">
+                            <h4>The Lost Meridian</h4>
+                            <author>Clara Osei</author>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="scroll-arrows">
+                    <button class="arrow-btn" onclick="scrollBooks(-1)">←</button>
+                    <button class="arrow-btn" onclick="scrollBooks(1)">→</button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section>
+        <div class="collections">
+            <div class="collections-img">
+                <img src="imgs/photo.jpg" alt="Popular Collections" />
+            </div>
+
+            <div class="collections-content">
+                <h2>Explore our <em>Popular Collections.</em></h2>
+                <p>From the classics of Hellenistic philosophy to the cutting edge of quantum theory, our collections are organized to spark curiosity and facilitate deep scholarly research.</p>
+
+                <ul class="collections-list">
+                    <li>
+                        <div class="icon"> <i class="fa-solid fa-book-open"></i></div>
+                        <div>
+                            <h4>The Enlightenment Era</h4>
+                            <span>2,400+ volumes available</span>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="icon"><i class="fa-solid fa-flask"></i></div>
+                        <div>
+                            <h4>Scientific Pioneers</h4>
+                            <span>1150+ research papers</span>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="icon"><i class="fa-solid fa-palette"></i></div>
+                        <div>
+                            <h4>Modernist Art History</h4>
+                            <span>800+ illustrated editions</span>
+                        </div>
+                    </li>
+                </ul>
+
+                <a href="signup.html" class="btn-join">Join Now & Borrow</a>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="banner">
+        <h2>Ready to start your journey?</h2>
+        <p>Become a member today and gain instant access to millions of pages of history, fiction, and scholarly works.</p>
+        <div class="buttons">
+            <a href="signup.html" class="signup">Join the Library</a>
+            <a href="BookList.html" class="free">Browse Free Titles</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-left">
+            <h3>The Digital Archivist</h3>
+            <p>© 2024 The Digital Archivist. Curating knowledge for the modern scholar.</p>
+        </div>
+        <div class="links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Archive Rules</a>
+            <a href="#">Contact Librarian</a>
+        </div>
+    </footer>
+
+
+    <script>
+        function scrollBooks(direction) {
+        const row = document.getElementById('booksScroll');
+        row.scrollLeft += direction * 180;
+        }
+    </script>
+</body>
 </html>
