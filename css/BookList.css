@@ -508,7 +508,9 @@ td {
 }
 
     .action-menu a {
-        display: block;
+        display: flex;
+        align-items:center;
+        gap: 8px;
         padding: 7px 12px;
         text-decoration: none;
         color: #333;
