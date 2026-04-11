@@ -33,3 +33,27 @@ document.addEventListener('submit', function(e) {
         }
     }
 });
+
+function getBooks() {
+  return JSON.parse(localStorage.getItem("books")) || [];
+}
+
+function saveBooks(books) {
+  localStorage.setItem("books", JSON.stringify(books));
+}
+
+function addBook(title) {
+  let books = getBooks();
+  books.push({ id: Date.now(), title });
+  saveBooks(books);
+}
+
+function addNewBook(e) {
+  e.preventDefault();
+
+  const title = document.getElementById("title").value;
+
+  addBook(title);
+
+  alert("Book added!");
+}

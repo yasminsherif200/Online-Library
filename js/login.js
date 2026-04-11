@@ -71,9 +71,49 @@ function validateLogin() {
 
 // Attach validation to both buttons
 document.querySelector(".user-btn").addEventListener("click", (e) => {
-  if (!validateLogin()) e.preventDefault();
+  e.preventDefault();
+  if (validateLogin()) handleLogin("user");
 });
 
 document.querySelector(".admin-btn").addEventListener("click", (e) => {
-  if (!validateLogin()) e.preventDefault();
+  e.preventDefault();
+  if (validateLogin()) handleLogin("admin");
 });
+
+// Handling Local Storage
+function handleLogin(role) {
+  const email = document.getElementById("email");
+  const password = document.getElementById("password");
+
+  let users = JSON.parse(localStorage.getItem("users")) || [];
+
+  let user = users.find(
+    u => u.email === email.value && u.password === password.value
+  );
+
+  if (!user) {
+    alert("Invalid credentials");
+    return;
+  }
+
+  // Role Check
+  if (role === "admin" && user.role !== "admin") {
+    showError(email, "You are not an admin.");
+    return;
+  }
+
+  if (role === "user" && user.role !== "user") {
+    showError(email, "You are not a normal user.");
+    return;
+  }
+
+  // Save session
+  sessionStorage.setItem("currentUser", JSON.stringify(user));
+
+  // Redirect
+  if (user.role === "admin") {
+    window.location.href = "AdminDashboard.html";
+  } else {
+    window.location.href = "User-Dashboard.html";
+  }
+}

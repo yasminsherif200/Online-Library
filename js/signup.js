@@ -135,16 +135,44 @@ function validateSignup() {
   return valid;
 }
 
-//  Admin checkbox → dynamic routing 
-const signUpBtn  = document.querySelector(".sign-up-btn");
-const isAdminBox = document.getElementById("checkbox");
+// Handling Local Storage
+document.getElementById("signupForm").addEventListener("submit", function (e) {
+  e.preventDefault();
 
-signUpBtn.addEventListener("click", (e) => {
-  if (!validateSignup()) {
-    e.preventDefault();
+  if (!validateSignup()) return;
+
+  const name = document.getElementById("username").value;
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  const isAdmin = document.getElementById("checkbox").checked;
+
+  let users = JSON.parse(localStorage.getItem("users")) || [];
+
+  let exists = users.find(u => u.email === email);
+  if (exists) {
+    alert("User already exists");
     return;
   }
 
-  // Override destination based on admin checkbox
-  signUpBtn.formAction = isAdminBox.checked ? "Admin-Dashboard.html" : "User-Dashboard.html";
+  const newUser = {
+    name,
+    email,
+    password,
+    role: isAdmin ? "admin" : "user"
+  };
+
+  users.push(newUser);
+  localStorage.setItem("users", JSON.stringify(users));
+
+  // Save logged-in user immediately
+  sessionStorage.setItem("currentUser", JSON.stringify(newUser));
+
+  alert("Registered successfully!");
+
+  // Redirect based on role
+  if (newUser.role === "admin") {
+    window.location.href = "AdminDashboard.html";
+  } else {
+    window.location.href = "User-Dashboard.html";
+  }
 });
