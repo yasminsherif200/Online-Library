@@ -3,14 +3,14 @@
 <head>
     <title>BookDetails</title>
     <link rel="stylesheet" href="css/BookList.css" />
+    <script src="js/BookList.js" defer></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
-    <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
-
+    <div class="overlay" id="overlay"></div>
     <div class="topnav">
         <div class="topnav-left">
             <div>
@@ -24,191 +24,154 @@
             <form class="search" action="Search-Books.html" method="get">
                 <input type="text" name="query" placeholder="Search archive..." />
             </form>
-
-            <div class="topnav-icon"><i class="fa-regular fa-bell"></i></div>
-            <div class="topnav-icon"><i class="fa-solid fa-gear"></i></div>
-            <div class="admin-avatar"><i class="fa-sharp-duotone fa-regular fa-user"></i></div>
+            <a href="Admin-Dashboard.html">
+                <div class="admin-avatar">
+                    <i class="fa-sharp-duotone fa-regular fa-user"></i>
+                </div>
+            </a>
         </div>
     </div>
-    <div class="layout">
-        <div class="iconbar">
-            <button class="iconbar-btn active" onclick="toggleSidebar()">
-                <i><<</i>
-            </button>
+        <div class="layout">
+            <div class="iconbar">
+                <button class="iconbar-btn active">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+            <aside class="sidebar" id="sidebar">
+                <div>
+                    <div class="sidebar-logo">
+                        <div class="logo-icon"><img src="imgs/logo.jpg" alt="logo" /></div>
+                        <div class="logo-text">
+                            <h4>The Archivist</h4>
+                            <p>System Administration</p>
+                        </div>
+                    </div>
+                    <ul class="nav-links">
+                        <li><a href="index.html"><i class="fa-solid fa-house"></i> Home</a></li>
+                        <li><a href="BookList.html" class="active"><i class="fa-solid fa-book-open"></i> Book List</a></li>
+                        <li><a href="Books-Management.html"><i class="fa-solid fa-person"></i> Management</a></li>
+                        <li><a href="Edit-Book.html"><i class="fa-solid fa-list"></i> Edit Books</a></li>
+                    </ul>
+                </div>
+                <div class="sidebar-bottom">
+                    <ul class="nav-links">
+                        <li><a href="index.html" style="color:#c0392b;"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+                    </ul>
+                </div>
+            </aside>
+
+            <main class="main">
+                <div class="page-title">
+                    <h1>Volume Registry</h1>
+                    <p>Manage the complete lifecycle of the archival collection.</p>
+                </div>
+
+                <!-- TABLE -->
+                <div class="table-card">
+                    <div class="table-toolbar">
+                        <a href="AddBook.html" class="btn-register"><i class="fa-solid fa-plus"></i> Add new book</a>
+                    </div>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Catalog Ref</th>
+                                <th>Book Title &amp; Details</th>
+                                <th>Status</th>
+                                <th>Lent To</th>
+                                <th>Archive Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="catalog-ref">#BK-9021</td>
+                                <td>
+                                    <div class="book-info">
+                                        <div class="book-thumb"><img src="imgs/book6.jpg" /></div>
+                                        <div>
+                                            <h4>The Philosophy of Architecture</h4>
+                                            <p>Rowan G. Vance • 1982 Edition</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="badge badge-borrowed">Borrowed</span></td>
+                                <td>
+                                    <div class="borrower">
+                                        <div class="borrower-avatar">AS</div>
+                                        <span>Arthur Sterling</span>
+                                    </div>
+                                </td>
+                                <td class="archive-date">Oct 12, 2023</td>
+                                <td><button class="action-btn">···</button></td>
+                            </tr>
+                            <tr>
+                                <td class="catalog-ref">#BK-4412</td>
+                                <td>
+                                    <div class="book-info">
+                                        <div class="book-thumb"><img src="imgs/book7.jpg" /></div>
+                                        <div>
+                                            <h4>Classical Ethics in Modern Times</h4>
+                                            <p>Dr. Helena Mirren • 2015 Edition</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="badge badge-available">Available</span></td>
+                                <td><span style="color:#ccc;">—</span></td>
+                                <td class="archive-date">Jan 04, 2024</td>
+                                <td><button class="action-btn">···</button></td>
+                            </tr>
+                            <tr>
+                                <td class="catalog-ref">#BK-7729</td>
+                                <td>
+                                    <div class="book-info">
+                                        <div class="book-thumb"><img src="imgs/book8.jpg" /></div>
+                                        <div>
+                                            <h4>The Digital Archive Manual</h4>
+                                            <p>System Core • v4.2 Release</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="badge badge-available">Available</span></td>
+                                <td><span style="color:#ccc;">—</span></td>
+                                <td class="archive-date">Mar 22, 2024</td>
+                                <td><button class="action-btn">···</button></td>
+                            </tr>
+                            <tr>
+                                <td class="catalog-ref">#BK-1088</td>
+                                <td>
+                                    <div class="book-info">
+                                        <div class="book-thumb"><img src="imgs/book9.jpg" /></div>
+                                        <div>
+                                            <h4>Navigating Information Flows</h4>
+                                            <p>Zoe Cassavetes • 2021 Edition</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="badge badge-borrowed">Borrowed</span></td>
+                                <td>
+                                    <div class="borrower">
+                                        <div class="borrower-avatar" style="background:#d4691e;">MP</div>
+                                        <span>Marcus Penhaligon</span>
+                                    </div>
+                                </td>
+                                <td class="archive-date">May 01, 2024</td>
+                                <td><button class="action-btn">···</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div class="table-footer">
+                        <p>Displaying 1–4 of 1,284 entries</p>
+                    </div>
+                </div>
+            </main>
+
         </div>
 
-        <aside class="sidebar" id="sidebar">
-            <div>
-                <div class="sidebar-logo">
-                    <div class="logo-icon"><img src="imgs/logo.jpg" alt="logo" /></div>
-                    <div class="logo-text">
-                        <h4>The Archivist</h4>
-                        <p>System Administration</p>
-                    </div>
-                </div>
-                <ul class="nav-links">
-                    <li><a href="Admin-Dashboard.html"><i class="fa-solid fa-table-cells"></i> Admin Dashboard</a></li>
-                    <li><a href="AddBook.html"><i class="fa-solid fa-plus"></i> Add Book</a></li>
-                    <li><a href="BookList.html" class="active"><i class="fa-solid fa-book-open"></i> Book List</a></li>
-                    <li><a href="Books-Management.html"><i class="fa-solid fa-person"></i> Management</a></li>
-                    <li><a href="Edit-Book.html"><i class="fa-solid fa-list"></i> Edit Books</a></li>
-                </ul>
-            </div>
-            <div class="sidebar-bottom">
-                <ul class="nav-links">
-                    <li><a href="#"><i class="fa-regular fa-circle-question"></i> Support</a></li>
-                    <li><a href="index.html" style="color:#c0392b;"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
-                </ul>
-            </div>
-        </aside>
 
-        <main class="main">
-            <div class="page-title">
-                <h1>Volume Registry</h1>
-                <p>Manage the complete lifecycle of the archival collection.</p>
-            </div>
-
-            <!-- STATS -->
-            <div class="stats-row">
-                <div class="stat-card">
-                    <div class="stat-label">Total Collection</div>
-                    <div class="stat-number">1,284</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">Currently Borrowed</div>
-                    <div class="stat-number">342</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">Archival Waitlist</div>
-                    <div class="stat-number">18</div>
-                </div>
-            </div>
-
-            <!-- TABLE -->
-            <div class="table-card">
-                <div class="table-toolbar">
-                    <a href="AddBook.html" class="btn-register"><i class="fa-solid fa-plus"></i> Register New Volume</a>
-                    <div class="toolbar-right">
-                        <button class="btn-tool"><i class="fa-solid fa-filter"></i> Filter</button>
-                        <button class="btn-tool"><i class="fa-solid fa-download"></i> Export</button>
-                    </div>
-                </div>
-
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Catalog Ref</th>
-                            <th>Book Title &amp; Details</th>
-                            <th>Status</th>
-                            <th>Lent To</th>
-                            <th>Archive Date</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="catalog-ref">#BK-9021</td>
-                            <td>
-                                <div class="book-info">
-                                    <div class="book-thumb"><img src="imgs/book6.jpg" /></div>
-                                    <div>
-                                        <h4>The Philosophy of Architecture</h4>
-                                        <p>Rowan G. Vance • 1982 Edition</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td><span class="badge badge-borrowed">Borrowed</span></td>
-                            <td>
-                                <div class="borrower">
-                                    <div class="borrower-avatar">AS</div>
-                                    <span>Arthur Sterling</span>
-                                </div>
-                            </td>
-                            <td class="archive-date">Oct 12, 2023</td>
-                            <td><button class="action-btn">···</button></td>
-                        </tr>
-                        <tr>
-                            <td class="catalog-ref">#BK-4412</td>
-                            <td>
-                                <div class="book-info">
-                                    <div class="book-thumb"><img src="imgs/book7.jpg" /></div>
-                                    <div>
-                                        <h4>Classical Ethics in Modern Times</h4>
-                                        <p>Dr. Helena Mirren • 2015 Edition</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td><span class="badge badge-available">Available</span></td>
-                            <td><span style="color:#ccc;">—</span></td>
-                            <td class="archive-date">Jan 04, 2024</td>
-                            <td><button class="action-btn">···</button></td>
-                        </tr>
-                        <tr>
-                            <td class="catalog-ref">#BK-7729</td>
-                            <td>
-                                <div class="book-info">
-                                    <div class="book-thumb"><img src="imgs/book8.jpg" /></div>
-                                    <div>
-                                        <h4>The Digital Archive Manual</h4>
-                                        <p>System Core • v4.2 Release</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td><span class="badge badge-available">Available</span></td>
-                            <td><span style="color:#ccc;">—</span></td>
-                            <td class="archive-date">Mar 22, 2024</td>
-                            <td><button class="action-btn">···</button></td>
-                        </tr>
-                        <tr>
-                            <td class="catalog-ref">#BK-1088</td>
-                            <td>
-                                <div class="book-info">
-                                    <div class="book-thumb"><img src="imgs/book9.jpg" /></div>
-                                    <div>
-                                        <h4>Navigating Information Flows</h4>
-                                        <p>Zoe Cassavetes • 2021 Edition</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td><span class="badge badge-borrowed">Borrowed</span></td>
-                            <td>
-                                <div class="borrower">
-                                    <div class="borrower-avatar" style="background:#d4691e;">MP</div>
-                                    <span>Marcus Penhaligon</span>
-                                </div>
-                            </td>
-                            <td class="archive-date">May 01, 2024</td>
-                            <td><button class="action-btn">···</button></td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <div class="table-footer">
-                    <p>Displaying 1–4 of 1,284 entries</p>
-                    <div class="pagination">
-                        <button class="page-btn"><i class="fa-solid fa-chevron-left"></i></button>
-                        <button class="page-btn active">1</button>
-                        <button class="page-btn">2</button>
-                        <button class="page-btn">3</button>
-                        <button class="page-btn"><i class="fa-solid fa-chevron-right"></i></button>
-                    </div>
-                </div>
-            </div>
-        </main>
-
-    </div>
-
- 
-    <div class="footer">
-        © 2024 The Digital Archivist &nbsp;•&nbsp; Preserving Knowledge
-    </div>
-
-
-    <script>
-        function toggleSidebar() {
-        document.getElementById('sidebar').classList.toggle('open');
-        document.getElementById('overlay').classList.toggle('show');
-        }
-    </script>
+        <div class="footer">
+            © 2024 The Digital Archivist &nbsp;•&nbsp; Preserving Knowledge
+        </div>
 </body>
 </html>
