@@ -1,66 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <title> Admin Dashboard  </title>
-    <link rel="stylesheet" href="AdminDashboard.css"/>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard | Digital Archivist</title>
+    <link rel="stylesheet" href="AdminDashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Libertinus+Serif:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
-
 <body>
+    <header class="navbar">
+        <div class="logo">E-Book <span>Admin</span></div>
+        <nav class="nav-container">
+            <a href="AdminDashboard.html" class="active">Admin Dashboard</a>
+            <a href="AddBook.html">Add Book</a>
+            <a href="Books-Management.html">Management</a>
+            <button class="logout-btn" onclick="window.location.href='index.html'">Exit</button>
+        </nav>
+    </header>
 
-    <nav>
-        <a href="index.html">HOME</a>  
-        <a href="AddBook.html">ADD BOOK</a> 
-        <a href="BookList.html">BOOK LIST</a> 
-        <a href="Books-Management.html"> MANAGEMENT </a> 
-        <a href="Edit-Book.html">EDIT BOOK</a>
-    </nav>
+    <main class="dashboard-container">
+        <header class="content-header">
+            <h1> Control Panel</h1>
+            <p>Oversee the digital repository and manage preserved knowledge.</p>
+        </header>
 
-    <hr>
-    </br>
-    <h1> Admin Dashboard </h1>
-    <p>Welcome to the Admin Dashboard! Here you can manage your library, add new books, and oversee user accounts.</p>
-    </br>
-    </br>
-    <button> <a href="AddBook.html"> Add New Book</a></button>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Archives</h3>
+                <p id="total-books">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>System Status</h3>
+                <p>Operational</p>
+            </div>
+        </div>
 
-    <div class="table-container">
-    <h3>Available Books</h3>
-    <table>
-        <thead>
-            <tr>
-                <th>Book ID</th>
-                <th>Book Name</th>
-                <th>Author</th>
-                <th>Category</th>
-                <th>Description</th>
-        
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>1</td>
-                <td>Book Title 1</td>
-                <td>Author 1</td>
-                <td>Fiction</td>
-                <td>A thrilling fiction novel.</td>
+        <section class="table-section">
+            <div class="table-header">
+                <h2>Cataloged Books</h2>
+                <a href="AddBook.html" class="add-new-link">+ Add New Book</a>
+            </div>
+            <table id="books-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Category</th>
+                        <th>Summary</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="books-body">
+                    </tbody>
+            </table>
+        </section>
+    </main>
 
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>Book Title 2</td>
-                <td>Author 2</td>
-                <td>Non-Fiction</td>
-                <td>An insightful non-fiction book.</td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td>Book Title 3</td>
-                <td>Author 3</td>
-                <td>Science Fiction</td>
-                <td>A captivating science fiction story.</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-    
+    <script src="storage.js"></script>
+    <script>
+        window.onload = displayBooks;
+    </script>
+</body>
+</html>

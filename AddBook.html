@@ -1,54 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <title> Add Book </title>
-  <Link rel="stylesheet" href="AddBook.css" />
+    <meta charset="UTF-8">
+    <title>Archive Entry | Add Book</title>
+    <link rel="stylesheet" href="AddBook.css">
+    <link href="https://fonts.googleapis.com/css2?family=Libertinus+Serif:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
-
 <body>
-  <nav>
-    <a href="index.html">HOME</a>
-    <a href="AdminDashboard.html">ADMIN DASHBOARD</a>
-    <a href="BookList.html">BOOK LIST</a>
-    <a href="Books-Management.html"> MANAGEMENT </a>
-    <a href="Edit-Book.html"> EDIT BOOK </a>
-  </nav>
+    <div class="auth-wrapper">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h2>Add New Book</h2>
+                <p>Register a new volume into the digital archives.</p>
+            </div>
+            
+            <form id="add-book-form">
+                <div class="input-group">
+                    <label>Book ID</label>
+                    <input type="number" id="book_id" placeholder="e.g. 1024" required>
+                </div>
 
-  <hr>
-  <h1> Add Book :</h1>
-  <form action="AdminDashboard.html" target="_self" method="get">
-    <label for="book_id">Book ID:</label><br />
-    <input type="number" name="book_id" id="book_id" required /><br /><br />
+                <div class="input-group">
+                    <label>Book Title</label>
+                    <input type="text" id="book_name" placeholder="Title of the work" required>
+                </div>
 
-    <label for="book_name">Book Name:</label><br />
-    <input type="text" name="book_name" id="book_name" required /><br /><br />
+                <div class="input-group">
+                    <label>Author</label>
+                    <input type="text" id="author" placeholder="Full name of author" required>
+                </div>
 
-    <label for="author">Author:</label><br />
-    <input type="text" name="author" id="author" /><br /><br />
+                <div class="input-group">
+                    <label>Category</label>
+                    <input type="text" id="category" placeholder="e.g. History, Science">
+                </div>
 
-    <label for="category">Category:</label><br />
-    <input type="text" name="category" id="category" /><br /><br />
+                <div class="input-group">
+                    <label>Short Description</label>
+                    <textarea id="description" rows="3" placeholder="Brief summary of the content..."></textarea>
+                </div>
 
-    <label for="description">Description:</label><br />
-    <textarea name="description" id="description" rows="4"></textarea><br /><br />
-    <label>Upload Digital Cover Scan</label>
-
-    <div class="upload-box">
-      <input type="file" id="book_cover" name="book_cover" accept="image/*" hidden>
-
-      <label for="book_cover" class="upload-label">
-        <span class="icon">📄</span>
-        <p>Upload Digital Cover Scan</p>
-        <small>PNG, JPG up to 10MB</small>
-      </label>
+                <button type="submit" class="submit-btn">Save to Archives</button>
+                <a href="AdminDashboard.html" class="back-link">Return to Dashboard</a>
+            </form>
+        </div>
     </div>
 
-    <input type="submit" value="Save Book and Return" />
-
-  </form>
-
+    <script src="storage.js"></script>
 </body>
-
 </html>
