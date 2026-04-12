@@ -154,7 +154,7 @@ td {
 .featured-image {
     flex: 1;
     height: 300px;
-    background: url('../images/library.jpg') center/cover;
+    background: url('../img/library.jpg') center/cover;
     border-radius: 10px;
 }
 .footer {
