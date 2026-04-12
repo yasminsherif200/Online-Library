@@ -2,56 +2,45 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Book - Admin Panel</title>
+    <title>Edit Book - Online Library</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <nav>
+        <div class="logo">The Digital <span>Archivist</span></div>
         <ul>
             <li><a href="index.html">Home</a></li>
-            <li><a href="AdminDashboard.html">Dashboard</a></li>
-            <li><a href="Books-Management.html">Back to Management</a></li>
-            <li><a href="login.html">Logout</a></li>
+            <li><a href="Books-Management.html">Back</a></li>
         </ul>
     </nav>
 
     <div class="container">
-        <h2>Edit Book Details</h2>
-        <p style="text-align: center; color: #666;">Update the information for the selected book below.</p>
-        
+        <div class="center-header">
+            <h2>Edit Book <span>Details</span></h2>
+        </div>
+
         <form id="editBookForm">
             <div class="form-group">
-                <label for="bookID">Book ID (Read-only):</label>
-                <input type="text" id="bookID" value="101" readonly>
+                <label>Book ID (Read-only):</label>
+                <input type="text" id="bookID" value="" readonly style="background-color: #f0f0f0;">
             </div>
-
             <div class="form-group">
-                <label for="bookName">Book Name:</label>
+                <label>Book Name:</label>
                 <input type="text" id="bookName" placeholder="Enter book title" required>
             </div>
-
             <div class="form-group">
-                <label for="author">Author:</label>
+                <label>Author:</label>
                 <input type="text" id="author" placeholder="Enter author name" required>
             </div>
-
             <div class="form-group">
-                <label for="category">Category:</label>
+                <label>Category:</label>
                 <select id="category">
                     <option value="Programming">Programming</option>
                     <option value="Science">Science</option>
                     <option value="Database">Database</option>
-                    <option value="History">History</option>
                 </select>
             </div>
-
-            <div class="form-group">
-                <label for="description">Description:</label>
-                <textarea id="description" rows="5" placeholder="Enter book description..."></textarea>
-            </div>
-
-            <button type="submit" class="btn edit-btn" style="width: 100%; margin-top: 15px;">Save Changes</button>
+            <button type="submit" class="submit-btn">Update Book Information</button>
         </form>
     </div>
 
