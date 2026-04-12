@@ -9,12 +9,7 @@
 <body>
     <nav>
         <div class="logo">The Digital <span>Archivist</span></div>
-        <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="User-Dashboard.html">User Dashboard</a></li>
-            <li><a href="Search-Books.html">Search Books</a></li>
-            <li><a href="login.html">Logout</a></li>
-        </ul>
+        <ul id="dynamicNavbar"></ul>
     </nav>
 
     <div class="container">
@@ -23,22 +18,21 @@
             <p>Search for your favorite books and borrow them instantly</p>
         </div>
 
-        <div class="search-section" style="background: #f9f9f9; padding: 25px; border-radius: 5px; margin-bottom: 40px;">
-            <div style="display: flex; gap: 15px; flex-wrap: wrap; align-items: flex-end;">
-                <div style="flex: 2;">
-                    <label style="font-weight: bold; font-size: 0.9rem;">Quick Search (Title or Author):</label>
-                    <input type="text" id="searchInput" placeholder="Type to filter results..." onkeyup="searchFunction()">
+        <div class="search-section">
+            <div class="search-controls">
+                <div>
+                    <label>Quick Search (Title or Author):</label>
+                    <input type="text" id="searchInput" placeholder="Type to filter results..." onkeyup="searchBooks()">
                 </div>
-                <div style="flex: 1;">
-                    <label style="font-weight: bold; font-size: 0.9rem;">Category:</label>
-                    <select id="categoryFilter">
+                <div>
+                    <label>Category:</label>
+                    <select id="categoryFilter" onchange="searchBooks()">
                         <option value="All">All Categories</option>
                         <option value="Programming">Programming</option>
                         <option value="Science">Science</option>
                         <option value="Database">Database</option>
                     </select>
                 </div>
-                <button class="btn edit-btn" onclick="searchFunction()" style="height: 45px;">Search</button>
             </div>
         </div>
 
@@ -52,32 +46,10 @@
                     <th>Action</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td>101</td>
-                    <td>Clean Code</td>
-                    <td>Robert Martin</td>
-                    <td><span style="color: green;">Available</span></td>
-                    <td><button class="btn edit-btn" onclick="borrowBook('Clean Code')">Borrow</button></td>
-                </tr>
-                <tr>
-                    <td>102</td>
-                    <td>Java Basics</td>
-                    <td>John Smith</td>
-                    <td><span style="color: green;">Available</span></td>
-                    <td><button class="btn edit-btn" onclick="borrowBook('Java Basics')">Borrow</button></td>
-                </tr>
-                <tr>
-                    <td>103</td>
-                    <td>Database Systems</td>
-                    <td>Elmasri</td>
-                    <td><span style="color: #d9534f;">Reserved</span></td>
-                    <td><button class="btn" disabled style="opacity: 0.5; cursor: not-allowed;">Unavailable</button></td>
-                </tr>
-            </tbody>
+            <tbody id="searchTableBody"></tbody>
         </table>
     </div>
 
-    <script src="java scrpit/dashboard-seaech.js"></script>
+    <script src="js/dashboard-search.js"></script>
 </body>
 </html>

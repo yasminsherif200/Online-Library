@@ -9,12 +9,7 @@
 <body>
     <nav>
         <div class="logo">The Digital <span>Archivist</span></div>
-        <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="Search-Books.html">Search Books</a></li>
-            <li><a href="BorrowedBooks.html">My Library</a></li>
-            <li><a href="login.html">Logout</a></li>
-        </ul>
+        <ul id="dynamicNavbar"></ul>
     </nav>
 
     <div class="container">
@@ -23,22 +18,22 @@
             <p>Manage your profile and track your borrowed collection</p>
         </div>
 
-        <section class="user-info-section" style="margin-bottom: 50px;">
+        <section class="user-info-section">
             <h3>Personal Information</h3>
             <form id="userProfileForm">
                 <div class="form-group">
                     <label>Username:</label>
-                    <input type="text" value="Abdullah_User" required>
+                    <input type="text" id="profileUsername" required >
                 </div>
                 <div class="form-group">
                     <label>Email Address:</label>
-                    <input type="email" value="user@example.com" required>
+                    <input type="email" id="profileEmail" required>
                 </div>
                 <button type="submit" class="btn edit-btn" style="margin-top: 10px;">Update Profile</button>
             </form>
         </section>
 
-        <hr style="border: 0; border-top: 1px solid #eee; margin: 40px 0;">
+        <hr class="custom-hr">
 
         <section class="borrowed-books-section">
             <h3>Currently <span>Borrowed Books</span></h3>
@@ -52,26 +47,11 @@
                         <th>Action</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>101</td>
-                        <td>Clean Code</td>
-                        <td>Robert Martin</td>
-                        <td><span style="color: #b08d57; font-weight: bold;">Borrowed</span></td>
-                        <td><button class="btn delete-btn" onclick="returnBook(this)">Return</button></td>
-                    </tr>
-                    <tr>
-                        <td>102</td>
-                        <td>Java Basics</td>
-                        <td>John Smith</td>
-                        <td><span style="color: #b08d57; font-weight: bold;">Borrowed</span></td>
-                        <td><button class="btn delete-btn" onclick="returnBook(this)">Return</button></td>
-                    </tr>
-                </tbody>
+                <tbody id="userBooksTableBody"></tbody>
             </table>
         </section>
     </div>
 
-    <script src="java scrpit/dashboard-seaech.js"></script>
+    <script src="js/dashboard-search.js"></script>
 </body>
 </html>
