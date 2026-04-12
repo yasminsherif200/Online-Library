@@ -2,67 +2,82 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Search Books</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Books - Online Library</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    <nav>
+        <div class="logo">The Digital <span>Archivist</span></div>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="User-Dashboard.html">User Dashboard</a></li>
+            <li><a href="Search-Books.html">Search Books</a></li>
+            <li><a href="login.html">Logout</a></li>
+        </ul>
+    </nav>
 
-<nav>
-    <a href="index.html">Home</a> |
-    <a href="User-Dashboard.html">User Dashboard</a> |
-    <a href="BookDetails.html">Books</a> |
-    <a href="BorrowedBooks.html">Borrowed Books</a> |
-    <a href="Search-Books.html">Search Books</a> |
-</nav>
-<hr>
+    <div class="container">
+        <div class="center-header">
+            <h2>Explore <span>Collection</span></h2>
+            <p>Search for your favorite books and borrow them instantly</p>
+        </div>
 
-<h1>Search Books</h1>
+        <div class="search-section" style="background: #f9f9f9; padding: 25px; border-radius: 5px; margin-bottom: 40px;">
+            <div style="display: flex; gap: 15px; flex-wrap: wrap; align-items: flex-end;">
+                <div style="flex: 2;">
+                    <label style="font-weight: bold; font-size: 0.9rem;">Quick Search (Title or Author):</label>
+                    <input type="text" id="searchInput" placeholder="Type to filter results..." onkeyup="searchFunction()">
+                </div>
+                <div style="flex: 1;">
+                    <label style="font-weight: bold; font-size: 0.9rem;">Category:</label>
+                    <select id="categoryFilter">
+                        <option value="All">All Categories</option>
+                        <option value="Programming">Programming</option>
+                        <option value="Science">Science</option>
+                        <option value="Database">Database</option>
+                    </select>
+                </div>
+                <button class="btn edit-btn" onclick="searchFunction()" style="height: 45px;">Search</button>
+            </div>
+        </div>
 
-<form>
-    <label>Book Title:</label><br>
-    <input type="text"><br><br>
+        <table id="searchTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Book Name</th>
+                    <th>Author</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>101</td>
+                    <td>Clean Code</td>
+                    <td>Robert Martin</td>
+                    <td><span style="color: green;">Available</span></td>
+                    <td><button class="btn edit-btn" onclick="borrowBook('Clean Code')">Borrow</button></td>
+                </tr>
+                <tr>
+                    <td>102</td>
+                    <td>Java Basics</td>
+                    <td>John Smith</td>
+                    <td><span style="color: green;">Available</span></td>
+                    <td><button class="btn edit-btn" onclick="borrowBook('Java Basics')">Borrow</button></td>
+                </tr>
+                <tr>
+                    <td>103</td>
+                    <td>Database Systems</td>
+                    <td>Elmasri</td>
+                    <td><span style="color: #d9534f;">Reserved</span></td>
+                    <td><button class="btn" disabled style="opacity: 0.5; cursor: not-allowed;">Unavailable</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
-    <label>Author:</label><br>
-    <input type="text"><br><br>
-
-    <label>Category:</label><br>
-    <select>
-        <option>Select Category</option>
-        <option>Programming</option>
-        <option>Science</option>
-        <option>History</option>
-        <option>Novels</option>
-    </select>
-
-    <br><br>
-    <button type="submit">Search</button>
-</form>
-
-<h2>Results</h2>
-
-<table border="1" width="70%">
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Author</th>
-        <th>Category</th>
-        <th>Availability</th>
-        <th>Action</th>
-    </tr>
-
-    <tr>
-        <td><input type="text"></td>
-        <td><input type="text"></td>
-        <td><input type="text"></td>
-        <td><input type="text"></td>
-        <td>
-            <select>
-                <option>Available</option>
-                <option>Not Available</option>
-            </select>
-        </td>
-        <td><button>Borrow</button></td>
-    </tr>
-</table>
-
+    <script src="java scrpit/dashboard-seaech.js"></script>
 </body>
 </html>
