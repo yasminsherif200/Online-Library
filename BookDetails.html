@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Digital Archivist</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/BookDetails.css">
+    <link rel="stylesheet" href="css\BookDetails.css">
 </head>
 <body>
 
@@ -26,10 +26,6 @@
         <h1 class="main-title">Available Books</h1>
         <p class="subtitle">Explore our curated selection of foundational knowledge. Each volume in this digital repository has been verified for scholarly integrity.</p>
 
-        <div class="controls">
-            <button class="btn-secondary">▽ FILTER</button>
-            <button class="btn-secondary">⇄ SORT</button>
-        </div>
 
         <table class="custom-table">
             <thead>
@@ -52,7 +48,7 @@
                     <td><span class="tag engineering">ENGINEERING</span></td>
                     <td>A handbook of agile software craf...</td>
                     <td><span class="status available">● Available</span></td>
-                    <td><a href="BorrowedBooks.html" class="borrow-link">Borrow</a></td>
+                    <td><a href="BorrowedBooks.html" class="borrow-link" onclick="borrowBook('Clean Code')">Borrow</a></td>
                 </tr>
                 <tr>
                     <td class="book-info">
@@ -63,7 +59,7 @@
                     <td><span class="tag development">DEVELOPMENT</span></td>
                     <td>Essential fundamentals for Java applic...</td>
                     <td><span class="status available">● Available</span></td>
-                    <td><a href="BorrowedBooks.html" class="borrow-link">Borrow</a></td>
+                    <td><a href="BorrowedBooks.html" class="borrow-link" onclick="borrowBook('Java Basics')">Borrow</a></td>
                 </tr>
                 <tr>
                     <td class="book-info">
@@ -89,6 +85,11 @@
     <div class="featured-image"></div>
 </div>
     </div>
+<script>
+   function borrowBook(bookName) {
+      localStorage.setItem("selectedBook", bookName);
+}
+</script>
 
 </body>
 <footer class="footer">
