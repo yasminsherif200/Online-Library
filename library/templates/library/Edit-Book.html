@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Book | Digital Archivist</title>
+    <link rel="stylesheet" href="css/AddBook.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="overlay" id="overlay"></div>
+
+    <div class="topnav">
+        <div class="topnav-left">
+            <div>
+                <h2>The Digital Archivist</h2>
+                <p>Catalog Registry &amp; Records</p>
+            </div>
+        </div>
+        <div class="topnav-right">
+            <a href="AdminDashboard.html">
+                <div class="admin-avatar">
+                    <i class="fa-regular fa-user"></i>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div class="layout">
+        <div class="iconbar">
+            <button class="iconbar-btn">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+
+        <aside class="sidebar" id="sidebar">
+            <div>
+                <div class="sidebar-logo">
+                    <div class="logo-icon"><img src="imgs/logo.jpg" alt="logo" /></div>
+                    <div class="logo-text">
+                        <h4>The Archivist</h4>
+                        <p>System Administration</p>
+                    </div>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="index.html"><i class="fa-solid fa-house"></i> Home</a></li>
+                    <li><a href="AdminDashboard.html"><i class="fa-solid fa-gauge"></i> Dashboard</a></li>
+                    <li><a href="BookList.html"><i class="fa-solid fa-book-open"></i> Book List</a></li>
+                    <li><a href="Books-Management.html"><i class="fa-solid fa-person"></i> Management</a></li>
+                    <li><a href="AddBook.html"><i class="fa-solid fa-plus"></i> Add Book</a></li>
+                    <li><a href="Edit-Book.html" class="active"><i class="fa-solid fa-pen"></i> Edit Books</a></li>
+                </ul>
+            </div>
+            <div class="sidebar-bottom">
+                <ul class="nav-links">
+                    <li><a href="#" id="logout-btn" class="logout-link"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <main class="main">
+            <div class="page-title">
+                <h1>Edit Book</h1>
+                <p>Update the information for the selected book.</p>
+            </div>
+
+            <div class="auth-wrapper">
+                <div class="auth-card">
+
+                    <div id="not-found-msg" class="not-found hidden">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <p>No book found. Please select a book to edit from <a href="Books-Management.html">Management</a>.</p>
+                    </div>
+
+                    <form id="editBookForm" class="hidden">
+                        <div class="input-group">
+                            <label>Book ID (Read-only)</label>
+                            <input type="text" id="bookID" readonly class="readonly-input">
+                        </div>
+                        <div class="input-group">
+                            <label>Book Title</label>
+                            <input type="text" id="bookTitle" placeholder="Enter book title" required>
+                        </div>
+                        <div class="input-group">
+                            <label>Author</label>
+                            <input type="text" id="bookAuthor" placeholder="Enter author name" required>
+                        </div>
+                        <div class="input-group">
+                            <label>ISBN</label>
+                            <input type="text" id="bookIsbn" placeholder="e.g. 978-0-001">
+                        </div>
+                        <div class="input-group">
+                            <label>Genre</label>
+                            <select id="bookGenre">
+                                <option value="">Select Genre</option>
+                                <option>Historical Fiction</option>
+                                <option>Poetry</option>
+                                <option>Adventure</option>
+                                <option>Science</option>
+                                <option>Non-Fiction</option>
+                                <option>Engineering</option>
+                                <option>Programming</option>
+                                <option>Philosophy</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>Description</label>
+                            <textarea id="bookDescription" rows="4" placeholder="Brief summary..."></textarea>
+                        </div>
+                        <div class="input-group">
+                            <label>Cover Image (leave empty to keep current)</label>
+                            <div class="upload-box">
+                                <label class="upload-label" for="bookCover">
+                                    <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
+                                    <p>Click to upload new cover</p>
+                                    <small>PNG, JPG supported</small>
+                                </label>
+                                <input type="file" id="bookCover" accept="image/*" hidden>
+                                <img id="cover-preview" class="cover-preview" alt="Cover Preview">
+                            </div>
+                        </div>
+                        <button type="submit" class="submit-btn">Save Changes</button>
+                        <a href="Books-Management.html" class="back-link">Cancel — Return to Management</a>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="footer">
+        © 2024 The Digital Archivist &nbsp;•&nbsp; Preserving Knowledge
+    </div>
+
+    <script src="js/storage.js"></script>
+    <script src="js/Edit-Book.js"></script>
+</body>
+</html>

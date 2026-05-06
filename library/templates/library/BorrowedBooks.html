@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Digital Archivist - Borrowed Books</title>
+    <link rel="stylesheet" href="css/BorrowedBooks.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <nav>
+        <div class="logo">The Digital Archivist</div>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="BookDetails.html">Books</a></li>
+            <li><a href="Search-Books.html">Search</a></li>
+            <li><a href="BorrowedBooks.html" class="active">My Library</a></li>
+            <li><a href="User-Dashboard.html">Dashboard</a></li>
+            <li><a href="#" id="logout-btn">Logout</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section class="hero">
+            <span class="badge">CURATED COLLECTION</span>
+            <h1>My Borrowed Books</h1>
+            <p>A personalized ledger of your current scholarly pursuits. Manage your borrowed volumes and track your reading progress.</p>
+        </section>
+
+        <section class="table-container">
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>BOOK NAME</th>
+                        <th>AUTHOR</th>
+                        <th>GENRE</th>
+                        <th>STATUS</th>
+                        <th>ACTION</th>
+                    </tr>
+                </thead>
+                <tbody id="borrowed-tbody">
+                    <!-- filled by JS -->
+                </tbody>
+            </table>
+            <p id="no-borrows-msg" class="no-borrows-msg hidden">
+                You have no borrowed books currently. 
+                <a href="BookDetails.html">Browse books →</a>
+            </p>
+        </section>
+
+        <section class="stats-grid">
+            <div class="stat-card dark">
+                <span class="stat-icon">📚</span>
+                <h2 id="stat-total">0</h2>
+                <p>TOTAL BORROWED</p>
+            </div>
+            <div class="stat-card">
+                <span class="stat-icon gold">⏳</span>
+                <h2 id="stat-active">0</h2>
+                <p>CURRENTLY ON LOAN</p>
+            </div>
+            <div class="stat-card">
+                <span class="stat-icon gold">✔️</span>
+                <h2 id="stat-returned">0</h2>
+                <p>RETURNED</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>The Digital Archivist © 2024. CURATING HISTORY FOR THE MODERN ERA. | PRIVACY POLICY | TERMS OF SERVICE | CONTACT</p>
+    </footer>
+
+    <script src="js/storage.js"></script>
+    <script src="js/BorrowedBooks.js"></script>
+</body>
+</html>
