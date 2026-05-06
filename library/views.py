@@ -35,6 +35,7 @@ def user_required(view_func):
     wrapper.__name__ = view_func.__name__
     return wrapper
 
+# ------------------------------------
 
 # ---------- Pages ----------
 
@@ -87,6 +88,7 @@ def addbook_page(request):
 def editbook_page(request):
     return render(request, 'library/Edit-Book.html')
 
+# -----------------------------------------
 
 # ---------- Authentication APIs ----------
 
@@ -172,6 +174,158 @@ def me(request):
         'role': 'admin' if request.user.is_staff else 'user'
     })
 
+# --------------------------------
+
+# ---------- Books APIs ----------
+
+def books_list(request):
+    if request.method != 'GET':
+        return JsonResponse({'success': False, 'message': 'Method not allowed'}, status=405)
+    
+    books = Book.objects.all()
+    data = [
+        {
+            'id': book.id,
+            'title': book.title,
+            'author': book.author,
+            'isbn': book.isbn,
+            'genre': book.genre,
+            'description': book.description,
+            'cover': book.cover,
+            'available': book.available,
+        }
+        for book in books
+    ]
+    return JsonResponse(data, safe=False)
+
+def book_detail(request, book_id):
+    if request.method != 'GET':
+        return JsonResponse({'success': False, 'message': 'Method not allowed'}, status=405)
+    
+    try:
+        book = Book.objects.get(id=book_id)
+    except Book.DoesNotExist:
+        return JsonResponse({'success': False, 'message': 'Book not found.'}, status=404)
+    
+    return JsonResponse({
+        'id': book.id,
+        'title': book.title,
+        'author': book.author,
+        'isbn': book.isbn,
+        'genre': book.genre,
+        'description': book.description,
+        'cover': book.cover,
+        'available': book.available,
+    })
+
+@csrf_exempt
+def add_book(request):
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'message': 'Method not allowed'}, status=405)
+    
+    if not request.user.is_authenticated or not request.user.is_staff:
+        return JsonResponse({'success': False, 'message': 'Unauthorized.'}, status=401)
+
+    data        = json.loads(request.body)
+    title       = data.get('title')
+    author      = data.get('author')
+    isbn        = data.get('isbn', '')
+    genre       = data.get('genre')
+    description = data.get('description', '')
+    cover       = data.get('cover', '')
+
+    if not title or not author or not genre:
+        return JsonResponse({'success': False, 'message': 'Title, author and genre are required.'})
+
+    book = Book.objects.create(
+        title=title,
+        author=author,
+        isbn=isbn,
+        genre=genre,
+        description=description,
+        cover=cover,
+        available=True
+    )
+
+    return JsonResponse({'success': True, 'id': book.id})
+
+@csrf_exempt
+def update_book(request, book_id):
+    if request.method != 'PUT':
+        return JsonResponse({'success': False, 'message': 'Method not allowed'}, status=405)
+    
+    if not request.user.is_authenticated or not request.user.is_staff:
+        return JsonResponse({'success': False, 'message': 'Unauthorized.'}, status=401)
+
+    try:
+        book = Book.objects.get(id=book_id)
+    except Book.DoesNotExist:
+        return JsonResponse({'success': False, 'message': 'Book not found.'}, status=404)
+
+    data = json.loads(request.body)
+
+    book.title       = data.get('title', book.title)
+    book.author      = data.get('author', book.author)
+    book.isbn        = data.get('isbn', book.isbn)
+    book.genre       = data.get('genre', book.genre)
+    book.description = data.get('description', book.description)
+    book.cover       = data.get('cover', book.cover)
+    book.save()
+
+    return JsonResponse({'success': True})
+
+@csrf_exempt
+def delete_book(request, book_id):
+    if request.method != 'DELETE':
+        return JsonResponse({'success': False, 'message': 'Method not allowed'}, status=405)
+    
+    if not request.user.is_authenticated or not request.user.is_staff:
+        return JsonResponse({'success': False, 'message': 'Unauthorized.'}, status=401)
+
+    try:
+        book = Book.objects.get(id=book_id)
+    except Book.DoesNotExist:
+        return JsonResponse({'success': False, 'message': 'Book not found.'}, status=404)
+
+    if not book.available:
+        return JsonResponse({'success': False, 'message': 'Cannot delete a book that is currently borrowed.'})
+
+    book.delete()
+    return JsonResponse({'success': True})
+
+def search_books(request):
+    if request.method != 'GET':
+        return JsonResponse({'success': False, 'message': 'Method not allowed'}, status=405)
+
+    title  = request.GET.get('title', '').strip()
+    author = request.GET.get('author', '').strip()
+    genre  = request.GET.get('genre', '').strip()
+
+    books = Book.objects.all()
+
+    if title:
+        books = books.filter(title__icontains=title)
+    if author:
+        books = books.filter(author__icontains=author)
+    if genre:
+        books = books.filter(genre__iexact=genre)
+
+    data = [
+        {
+            'id': book.id,
+            'title': book.title,
+            'author': book.author,
+            'isbn': book.isbn,
+            'genre': book.genre,
+            'description': book.description,
+            'cover': book.cover,
+            'available': book.available,
+        }
+        for book in books
+    ]
+    return JsonResponse(data, safe=False)
+
+# ------------------------------------
 
 
 
