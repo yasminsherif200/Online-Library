@@ -29,4 +29,14 @@ urlpatterns = [
     path('api/books/add/<srt:book_id>/update/', views.update_book, name='update_book'),
     path('api/books/add/<str:book_id>/delete/', views.delete_book, name='delete_book'),
     path('api/books/search/', views.search_books, name='search_books'),
+
+    # Borrows urls
+    path('api/borrows/', views.borrow_book, name='borrow_book'),
+    path('api/borrows/mine/', views.my_borrows, name='my_borrows'),
+    path('api/borrows/active/', views.active_borrows, name='active_borrows'),
+    path('api/borrows/<int:borrow_id>/return/', views.return_book, name='return_book'),
+    path('api/borrows/stats/', views.borrow_stats, name='borrow_stats'),
+
+    # Admin
+    path('api/admin/stats/', views.admin_stats, name='admin_stats'),
 ]

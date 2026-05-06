@@ -327,9 +327,147 @@ def search_books(request):
 
 # ------------------------------------
 
+# ---------- Borrows APIs ----------
+
+@csrf_exempt
+def borrow_book(request):
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'message': 'Method not allowed'}, status=405)
+
+    if not request.user.is_authenticated:
+        return JsonResponse({'success': False, 'message': 'Not logged in.'}, status=401)
+
+    data    = json.loads(request.body)
+    book_id = data.get('book_id')
+
+    try:
+        book = Book.objects.get(id=book_id)
+    except Book.DoesNotExist:
+        return JsonResponse({'success': False, 'message': 'Book not found.'}, status=404)
+
+    if not book.available:
+        return JsonResponse({'success': False, 'message': 'Book not available.'})
+
+    BorrowRecord.objects.create(
+        book=book,
+        user=request.user,
+    )
+
+    book.available = False
+    book.save()
+
+    return JsonResponse({'success': True})
 
 
+def my_borrows(request):
+    if request.method != 'GET':
+        return JsonResponse({'success': False, 'message': 'Method not allowed'}, status=405)
 
+    if not request.user.is_authenticated:
+        return JsonResponse({'success': False, 'message': 'Not logged in.'}, status=401)
+
+    borrows = BorrowRecord.objects.filter(
+        user=request.user,
+        return_date=None
+    )
+
+    data = [
+        {
+            'id': borrow.id,
+            'bookId': borrow.book.id,
+            'title': borrow.book.title,
+            'author': borrow.book.author,
+            'genre': borrow.book.genre,
+            'cover': borrow.book.cover,
+            'borrow_date': borrow.borrow_date.strftime('%Y-%m-%d'),
+        }
+        for borrow in borrows
+    ]
+    return JsonResponse(data, safe=False)
+
+
+def active_borrows(request):
+    if request.method != 'GET':
+        return JsonResponse({'success': False, 'message': 'Method not allowed'}, status=405)
+
+    if not request.user.is_authenticated or not request.user.is_staff:
+        return JsonResponse({'success': False, 'message': 'Unauthorized.'}, status=401)
+
+    borrows = BorrowRecord.objects.filter(return_date=None)
+
+    data = [
+        {
+            'id': borrow.id,
+            'bookId': borrow.book.id,
+            'userEmail': borrow.user.email,
+            'borrow_date': borrow.borrow_date.strftime('%Y-%m-%d'),
+        }
+        for borrow in borrows
+    ]
+    return JsonResponse(data, safe=False)
+
+@csrf_exempt
+def return_book(request, borrow_id):
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'message': 'Method not allowed'}, status=405)
+
+    if not request.user.is_authenticated:
+        return JsonResponse({'success': False, 'message': 'Not logged in.'}, status=401)
+
+    try:
+        borrow = BorrowRecord.objects.get(id=borrow_id, user=request.user)
+    except BorrowRecord.DoesNotExist:
+        return JsonResponse({'success': False, 'message': 'Borrow record not found.'}, status=404)
+
+    if borrow.return_date is not None:
+        return JsonResponse({'success': False, 'message': 'Book already returned.'})
+
+    borrow.return_date = timezone.now()
+    borrow.save()
+
+    borrow.book.available = True
+    borrow.book.save()
+
+    return JsonResponse({'success': True})
+
+
+def borrow_stats(request):
+    if request.method != 'GET':
+        return JsonResponse({'success': False, 'message': 'Method not allowed'}, status=405)
+
+    if not request.user.is_authenticated:
+        return JsonResponse({'success': False, 'message': 'Not logged in.'}, status=401)
+
+    all_borrows      = BorrowRecord.objects.filter(user=request.user)
+    active_borrows   = all_borrows.filter(return_date=None)
+    returned_borrows = all_borrows.exclude(return_date=None)
+
+    return JsonResponse({
+        'total':    all_borrows.count(),
+        'active':   active_borrows.count(),
+        'returned': returned_borrows.count(),
+    })
+
+# ------------------------------------
+
+def admin_stats(request):
+    if request.method != 'GET':
+        return JsonResponse({'success': False, 'message': 'Method not allowed'}, status=405)
+
+    if not request.user.is_authenticated or not request.user.is_staff:
+        return JsonResponse({'success': False, 'message': 'Unauthorized.'}, status=401)
+
+    total_books  = Book.objects.count()
+    borrowed     = Book.objects.filter(available=False).count()
+    available    = Book.objects.filter(available=True).count()
+    total_users  = User.objects.filter(is_staff=False).count()
+
+    return JsonResponse({
+        'total_books': total_books,
+        'borrowed':    borrowed,
+        'available':   available,
+        'total_users': total_users,
+    })
 
 
 
