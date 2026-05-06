@@ -88,6 +88,91 @@ def editbook_page(request):
     return render(request, 'library/Edit-Book.html')
 
 
+# ---------- Authentication APIs ----------
+
+@csrf_exempt
+def register(request):
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'message': 'Method not allowed'}, status=405)
+
+    data = json.loads(request.body)
+    username  = data.get('username')
+    email     = data.get('email')
+    password  = data.get('password')
+    is_admin  = data.get('is_admin', False)
+
+    if User.objects.filter(email=email).exists():
+        return JsonResponse({'success': False, 'message': 'Email already registered.'})
+
+    user = User.objects.create_user(
+        username=username,
+        email=email,
+        password=password,
+        is_staff=is_admin
+    )
+
+    login(request, user)
+
+    return JsonResponse({
+        'success': True,
+        'username': user.username,
+        'email': user.email,
+        'role': 'admin' if user.is_staff else 'user'
+    })
+
+@csrf_exempt
+def login_view(request):
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'message': 'Method not allowed'}, status=405)
+
+    data     = json.loads(request.body)
+    email    = data.get('email')
+    password = data.get('password')
+    role     = data.get('role')
+
+    try:
+        user_obj = User.objects.get(email=email)
+    except User.DoesNotExist:
+        return JsonResponse({'success': False, 'message': 'No account found with this email.'})
+
+    user = authenticate(request, username=user_obj.username, password=password)
+
+    if user is None:
+        return JsonResponse({'success': False, 'message': 'Invalid password.'})
+
+    if role == 'admin' and not user.is_staff:
+        return JsonResponse({'success': False, 'message': 'No admin account found with these credentials.'})
+
+    if role == 'user' and user.is_staff:
+        return JsonResponse({'success': False, 'message': 'Invalid email or password.'})
+
+    login(request, user)
+
+    return JsonResponse({
+        'success': True,
+        'username': user.username,
+        'email': user.email,
+        'role': 'admin' if user.is_staff else 'user'
+    })
+
+@csrf_exempt
+def logout_view(request):
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'message': 'Method not allowed'}, status=405)
+    logout(request)
+    return JsonResponse({'success': True})
+
+def me(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'success': False, 'message': 'Not logged in.'}, status=401)
+    return JsonResponse({
+        'success': True,
+        'username': request.user.username,
+        'email': request.user.email,
+        'role': 'admin' if request.user.is_staff else 'user'
+    })
+
+
 
 
 
