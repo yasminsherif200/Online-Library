@@ -1,10 +1,12 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token }}">
     <title>Books Management | Digital Archivist</title>
-    <link rel="stylesheet" href="css/Books-Management.css">
+    <link rel="stylesheet" href="{% static 'css/Books-Management.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
@@ -20,7 +22,7 @@
             </div>
         </div>
         <div class="topnav-right">
-            <a href="AdminDashboard.html">
+            <a href="/AdminDashboard/">
                 <div class="admin-avatar">
                     <i class="fa-regular fa-user"></i>
                 </div>
@@ -38,19 +40,19 @@
         <aside class="sidebar" id="sidebar">
             <div>
                 <div class="sidebar-logo">
-                    <div class="logo-icon"><img src="imgs/logo.jpg" alt="logo" /></div>
+                    <div class="logo-icon"><img src="{% static 'imgs/logo.jpg' %}" alt="logo" /></div>
                     <div class="logo-text">
                         <h4>The Archivist</h4>
                         <p>System Administration</p>
                     </div>
                 </div>
                 <ul class="nav-links">
-                    <li><a href="index.html"><i class="fa-solid fa-house"></i> Home</a></li>
-                    <li><a href="AdminDashboard.html"><i class="fa-solid fa-gauge"></i> Dashboard</a></li>
-                    <li><a href="BookList.html"><i class="fa-solid fa-book-open"></i> Book List</a></li>
-                    <li><a href="Books-Management.html" class="active"><i class="fa-solid fa-person"></i> Management</a></li>
-                    <li><a href="AddBook.html"><i class="fa-solid fa-plus"></i> Add Book</a></li>
-                    <li><a href="Edit-Book.html"><i class="fa-solid fa-list"></i> Edit Books</a></li>
+                    <li><a href="/"><i class="fa-solid fa-house"></i> Home</a></li>
+                    <li><a href="/AdminDashboard/"><i class="fa-solid fa-gauge"></i> Dashboard</a></li>
+                    <li><a href="/BookList/"><i class="fa-solid fa-book-open"></i> Book List</a></li>
+                    <li><a href="/Books-Management/" class="active"><i class="fa-solid fa-person"></i> Management</a></li>
+                    <li><a href="/AddBook/"><i class="fa-solid fa-plus"></i> Add Book</a></li>
+                    <li><a href="/Edit-Book/"><i class="fa-solid fa-list"></i> Edit Books</a></li>
                 </ul>
             </div>
             <div class="sidebar-bottom">
@@ -69,7 +71,7 @@
             <div class="table-card">
                 <div class="table-toolbar">
                     <h2>All Books</h2>
-                    <a href="AddBook.html" class="btn-register">
+                    <a href="/AddBook/" class="btn-register">
                         <i class="fa-solid fa-plus"></i> Add New Book
                     </a>
                 </div>
@@ -101,7 +103,7 @@
         © 2024 The Digital Archivist &nbsp;•&nbsp; Preserving Knowledge
     </div>
 
-    <script src="js/storage.js"></script>
-    <script src="js/Books-Management.js"></script>
+    <script src="{% static 'js/storage.js' %}"></script>
+    <script src="{% static 'js/Books-Management.js' %}"></script>
 </body>
 </html>

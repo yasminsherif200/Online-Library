@@ -1,22 +1,24 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token }}">
     <title>The Digital Archivist — Books</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/BookDetails.css">
+    <link rel="stylesheet" href="{% static 'css/BookDetails.css' %}">
 </head>
 <body>
 
     <nav>
         <div class="logo">The Digital Archivist</div>
         <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="BookDetails.html" class="active">Books</a></li>
-            <li><a href="Search-Books.html">Search</a></li>
-            <li><a href="BorrowedBooks.html">My Library</a></li>
-            <li><a href="User-Dashboard.html">Dashboard</a></li>
+            <li><a href="/">Home</a></li>
+            <li><a href="/BookDetails/" class="active">Books</a></li>
+            <li><a href="/Search-Books/">Search</a></li>
+            <li><a href="/BorrowedBooks/">My Library</a></li>
+            <li><a href="/User-Dashboard/">Dashboard</a></li>
             <li><a href="#" id="logout-btn">Logout</a></li>
         </ul>
     </nav>
@@ -47,7 +49,7 @@
         <p>The Digital Archivist © 2024. CURATING HISTORY FOR THE MODERN ERA. | PRIVACY POLICY | TERMS OF SERVICE | CONTACT</p>
     </footer>
 
-    <script src="js/storage.js"></script>
-    <script src="js/BookDetails.js"></script>
+    <script src="{% static 'js/storage.js' %}"></script>
+    <script src="{% static 'js/BookDetails.js' %}"></script>
 </body>
 </html>

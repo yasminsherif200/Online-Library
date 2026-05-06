@@ -1,10 +1,12 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token }}">
     <title>Edit Book | Digital Archivist</title>
-    <link rel="stylesheet" href="css/AddBook.css">
+    <link rel="stylesheet" href="{% static 'css/AddBook.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
@@ -20,7 +22,7 @@
             </div>
         </div>
         <div class="topnav-right">
-            <a href="AdminDashboard.html">
+            <a href="/AdminDashboard/">
                 <div class="admin-avatar">
                     <i class="fa-regular fa-user"></i>
                 </div>
@@ -38,19 +40,19 @@
         <aside class="sidebar" id="sidebar">
             <div>
                 <div class="sidebar-logo">
-                    <div class="logo-icon"><img src="imgs/logo.jpg" alt="logo" /></div>
+                    <div class="logo-icon"><img src="{% static 'imgs/logo.jpg' %}" alt="logo" /></div>
                     <div class="logo-text">
                         <h4>The Archivist</h4>
                         <p>System Administration</p>
                     </div>
                 </div>
                 <ul class="nav-links">
-                    <li><a href="index.html"><i class="fa-solid fa-house"></i> Home</a></li>
-                    <li><a href="AdminDashboard.html"><i class="fa-solid fa-gauge"></i> Dashboard</a></li>
-                    <li><a href="BookList.html"><i class="fa-solid fa-book-open"></i> Book List</a></li>
-                    <li><a href="Books-Management.html"><i class="fa-solid fa-person"></i> Management</a></li>
-                    <li><a href="AddBook.html"><i class="fa-solid fa-plus"></i> Add Book</a></li>
-                    <li><a href="Edit-Book.html" class="active"><i class="fa-solid fa-pen"></i> Edit Books</a></li>
+                    <li><a href="/"><i class="fa-solid fa-house"></i> Home</a></li>
+                    <li><a href="/AdminDashboard/"><i class="fa-solid fa-gauge"></i> Dashboard</a></li>
+                    <li><a href="/BookList/"><i class="fa-solid fa-book-open"></i> Book List</a></li>
+                    <li><a href="/Books-Management/"><i class="fa-solid fa-person"></i> Management</a></li>
+                    <li><a href="/AddBook/"><i class="fa-solid fa-plus"></i> Add Book</a></li>
+                    <li><a href="/Edit-Book/" class="active"><i class="fa-solid fa-pen"></i> Edit Books</a></li>
                 </ul>
             </div>
             <div class="sidebar-bottom">
@@ -71,7 +73,7 @@
 
                     <div id="not-found-msg" class="not-found hidden">
                         <i class="fa-solid fa-triangle-exclamation"></i>
-                        <p>No book found. Please select a book to edit from <a href="Books-Management.html">Management</a>.</p>
+                        <p>No book found. Please select a book to edit from <a href="/Books-Management/">Management</a>.</p>
                     </div>
 
                     <form id="editBookForm" class="hidden">
@@ -122,7 +124,7 @@
                             </div>
                         </div>
                         <button type="submit" class="submit-btn">Save Changes</button>
-                        <a href="Books-Management.html" class="back-link">Cancel — Return to Management</a>
+                        <a href="/Books-Management/" class="back-link">Cancel — Return to Management</a>
                     </form>
                 </div>
             </div>
@@ -133,7 +135,7 @@
         © 2024 The Digital Archivist &nbsp;•&nbsp; Preserving Knowledge
     </div>
 
-    <script src="js/storage.js"></script>
-    <script src="js/Edit-Book.js"></script>
+    <script src="{% static 'js/storage.js' %}"></script>
+    <script src="{% static 'js/Edit-Book.js' %}"></script>
 </body>
 </html>

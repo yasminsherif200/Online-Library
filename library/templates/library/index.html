@@ -1,23 +1,25 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8" />
+    <meta name="csrf-token" content="{{ csrf_token }}">
     <title>Online Library website</title>
     <meta name="description" content="Online library to search and borrow books">
-    <link rel="stylesheet" href="css/index.css" />
+    <link rel="stylesheet" href="{% static 'css/index.css' %}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"> 
 </head>
 <body>
     <nav>
         <h3>The Digital Archivist</h3>
         <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="BookDetails.html">Books</a></li>
+            <li><a href="/">Home</a></li>
+            <li><a href="/BookDetails/">Books</a></li>
         </ul>
 
         <div>
-            <a href="login.html" class="login">Login</a>
-            <a href="signup.html" class="sign">Sign Up</a>
+            <a href="/login/" class="login">Login</a>
+            <a href="/signup/" class="sign">Sign Up</a>
         </div>
     </nav>
     <div class="main">
@@ -29,18 +31,16 @@
         </h1>
         <p>You can read and borrow books easily. Immerse yourself in a curated sanctuary of human thought and discovery.</p>
 
-        <form class="search" action="Search-Books.html" method="get">
+        <form class="search" action="/Search-Books/" method="get">
             <input type="text" name="query" placeholder="Search by title, author, or ISBN..." />
             <button type="submit">Explore</button>
         </form>
-
 
         <div class="stats">
             <div>
                 <div class="n">120k+</div>
                 <div class="label">Manuscripts </div>
             </div>
-
             <div>
                 <div class="n">45k</div>
                 <div class="label">Scholars</div>
@@ -51,7 +51,7 @@
     <section class="sec">
         <div class="header">
             <h2>New Arrivals</h2>
-            <a href="BookDetails.html">Browse all →</a>
+            <a href="/BookDetails/">Browse all →</a>
         </div>
 
         <div>
@@ -63,13 +63,12 @@
                             <h3>Echoes of Time</h3>
                             <p>A journey through memory and forgotten civilisations across three centuries.</p>
                             <div class="popup-cover">
-                                <img src="imgs/book1.png" alt="Echoes of Time" />
+                                <img src="{% static 'imgs/book1.png' %}" alt="Echoes of Time" />
                             </div>
-                            <a href="BookDetails.html" class="btn-read">Start Reading</a>
+                            <a href="/BookDetails/" class="btn-read">Start Reading</a>
                         </div>
-
                         <div class="cover">
-                            <img src="imgs/book1.png" alt="Echoes of Time" />
+                            <img src="{% static 'imgs/book1.png' %}" alt="Echoes of Time" />
                         </div>
                         <div class="small-info">
                             <h4>Echoes of Time</h4>
@@ -82,12 +81,12 @@
                             <h3>The Silent Verse</h3>
                             <p>A poetic exploration of silence, identity and the spaces between words.</p>
                             <div class="popup-cover">
-                                <img src="imgs/book2.png" alt="The Silent Verse" />
+                                <img src="{% static 'imgs/book2.png' %}" alt="The Silent Verse" />
                             </div>
-                            <a href="BookDetails.html" class="btn-read">Start Reading</a>
+                            <a href="/BookDetails/" class="btn-read">Start Reading</a>
                         </div>
                         <div class="cover">
-                            <img src="imgs/book2.png" alt="The Silent Verse" />
+                            <img src="{% static 'imgs/book2.png' %}" alt="The Silent Verse" />
                         </div>
                         <div class="small-info">
                             <h4>The Silent Verse</h4>
@@ -100,12 +99,12 @@
                             <h3>Oceans Within</h3>
                             <p>A deep dive into marine biology and the mysteries of the deep sea.</p>
                             <div class="popup-cover">
-                                <img src="imgs/book4.png" alt="Oceans Within" />
+                                <img src="{% static 'imgs/book4.png' %}" alt="Oceans Within" />
                             </div>
-                            <a href="BookDetails.html" class="btn-read">Start Reading</a>
+                            <a href="/BookDetails/" class="btn-read">Start Reading</a>
                         </div>
                         <div class="cover">
-                            <img src="imgs/book4.png" alt="Oceans Within" />
+                            <img src="{% static 'imgs/book4.png' %}" alt="Oceans Within" />
                         </div>
                         <div class="small-info">
                             <h4>Oceans Within</h4>
@@ -118,12 +117,12 @@
                             <h3>Peak Wisdom</h3>
                             <p>Lessons from the world's highest mountains and the climbers who conquered them.</p>
                             <div class="popup-cover">
-                                <img src="imgs/book5.png" alt="Peak Wisdom" />
+                                <img src="{% static 'imgs/book5.png' %}" alt="Peak Wisdom" />
                             </div>
-                            <a href="BookDetails.html" class="btn-read">Start Reading</a>
+                            <a href="/BookDetails/" class="btn-read">Start Reading</a>
                         </div>
                         <div class="cover">
-                            <img src="imgs/book5.png" alt="Peak Wisdom" />
+                            <img src="{% static 'imgs/book5.png' %}" alt="Peak Wisdom" />
                         </div>
                         <div class="small-info">
                             <h4>Peak Wisdom</h4>
@@ -136,12 +135,12 @@
                             <h3>The Lost Meridian</h3>
                             <p>An adventure across uncharted lands in search of a forgotten empire.</p>
                             <div class="popup-cover">
-                                <img src="imgs/book3.png" alt="The Lost Meridian" />
+                                <img src="{% static 'imgs/book3.png' %}" alt="The Lost Meridian" />
                             </div>
-                            <a href="BookDetails.html" class="btn-read">Start Reading</a>
+                            <a href="/BookDetails/" class="btn-read">Start Reading</a>
                         </div>
                         <div class="cover">
-                            <img src="imgs/book3.png" alt="The Lost Meridian" />
+                            <img src="{% static 'imgs/book3.png' %}" alt="The Lost Meridian" />
                         </div>
                         <div class="small-info">
                             <h4>The Lost Meridian</h4>
@@ -156,14 +155,13 @@
                     <button class="arrow-btn" onclick="scrollBooks(1)">→</button>
                 </div>
             </div>
-
         </div>
     </section>
 
     <section>
         <div class="collections">
             <div class="collections-img">
-                <img src="imgs/photo.jpg" alt="Popular Collections" />
+                <img src="{% static 'imgs/photo.jpg' %}" alt="Popular Collections" />
             </div>
 
             <div class="collections-content">
@@ -194,9 +192,8 @@
                     </li>
                 </ul>
 
-                <a href="signup.html" class="btn-join">Join Now & Borrow</a>
+                <a href="/signup/" class="btn-join">Join Now & Borrow</a>
             </div>
-
         </div>
     </section>
 
@@ -204,8 +201,8 @@
         <h2>Ready to start your journey?</h2>
         <p>Become a member today and gain instant access to millions of pages of history, fiction, and scholarly works.</p>
         <div class="buttons">
-            <a href="signup.html" class="signup">Join the Library</a>
-            <a href="BookDetails.html" class="free">Browse Free Titles</a>
+            <a href="/signup/" class="signup">Join the Library</a>
+            <a href="/BookDetails/" class="free">Browse Free Titles</a>
         </div>
     </section>
 
@@ -222,7 +219,7 @@
         </div>
     </footer>
 
-    <script src="js/storage.js"></script>
+    <script src="{% static 'js/storage.js' %}"></script>
     <script>
         function scrollBooks(direction) {
         const row = document.getElementById('booksScroll');

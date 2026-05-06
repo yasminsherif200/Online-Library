@@ -1,9 +1,11 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/signup.css">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <link rel="stylesheet" href="{% static 'css/signup.css' %}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Libertinus+Serif:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap" rel="stylesheet">
@@ -16,9 +18,9 @@
       <nav>
         <div class="logo">The Digital Archivist</div>
         <div class="nav-links">
-          <a href="index.html">Home</a> 
-          <a href="signup.html">Sign Up</a> 
-          <a href="login.html">Login</a> 
+          <a href="/">Home</a> 
+          <a href="/signup/">Sign Up</a> 
+          <a href="/login/">Login</a> 
         </div>
       </nav>
     </header>
@@ -54,13 +56,12 @@
                     <button type="submit" class="sign-up-btn">
                         Sign Up
                     </button>
-                    <p class="signup-form-quote">Already have an account?  <a href="login.html" class="login">Login</a></p>
+                    <p class="signup-form-quote">Already have an account? <a href="/login/" class="login">Login</a></p>
                 </form>
             </div>
         </section>
     </main>
-    
-    
+
     <footer>
       <div class="footer-brand">
         <p>The Digital Archivist</p>
@@ -75,7 +76,7 @@
         <p>&copy; 2025 The Digital Archivist. All rights reserved.</p>
       </div>
     </footer>
-    <script src="js/storage.js"></script>
-    <script src="js/signup.js"></script>
+    <script src="{% static 'js/storage.js' %}"></script>
+    <script src="{% static 'js/signup.js' %}"></script>
 </body>
 </html>
