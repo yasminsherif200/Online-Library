@@ -1,8 +1,24 @@
+// ─── Helper: get CSRF cookie ─────────────────────────────────────────────────
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== "") {
+    const cookies = document.cookie.split(";");
+    for (let cookie of cookies) {
+      cookie = cookie.trim();
+      if (cookie.startsWith(name + "=")) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+
 // ─── Route Guard ───────────────────────────────────────────────────────────
 // Check session via API instead of localStorage
 async function requireAdmin() {
   try {
-    const res = await fetch("/api/session/", { credentials: "include" });
+    const res = await fetch("/api/auth/me/", { credentials: "include" });
     if (!res.ok) {
       window.location.href = "/login/";
       return false;
@@ -23,7 +39,7 @@ async function requireAdmin() {
 document.getElementById("logout-btn").addEventListener("click", async (e) => {
   e.preventDefault();
   try {
-    await fetch("/api/logout/", {
+    await fetch("/api/auth/logout/", {
       method: "POST",
       credentials: "include",
       headers: { "X-CSRFToken": getCookie("csrftoken") },
@@ -51,22 +67,6 @@ overlay.addEventListener("click", () => {
   sidebarToggle.classList.remove("active");
 });
 
-// ─── Helper: get CSRF cookie ─────────────────────────────────────────────────
-function getCookie(name) {
-  let cookieValue = null;
-  if (document.cookie && document.cookie !== "") {
-    const cookies = document.cookie.split(";");
-    for (let cookie of cookies) {
-      cookie = cookie.trim();
-      if (cookie.startsWith(name + "=")) {
-        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-        break;
-      }
-    }
-  }
-  return cookieValue;
-}
-
 // ─── Load & Render Books ─────────────────────────────────────────────────────
 async function loadBooks() {
   const tbody = document.getElementById("books-tbody");
@@ -87,7 +87,7 @@ async function loadBooks() {
   }
 
   try {
-    const borrowsRes = await fetch("/api/borrows/", { credentials: "include" });
+    const borrowsRes = await fetch("/api/borrows/active/", { credentials: "include" });
     if (borrowsRes.ok) {
       borrows = await borrowsRes.json();
     }
@@ -153,7 +153,7 @@ async function loadBooks() {
       <td style="position:relative;">
         <button class="action-btn" data-id="${book.id}">···</button>
         <div class="action-menu" id="menu-${book.id}" style="display:none;">
-          <a href="/edit-book/?id=${book.id}"><i class="fa-solid fa-pen"></i> Edit</a>
+          <a href="/Edit-Book/?id=${book.id}"><i class="fa-solid fa-pen"></i> Edit</a>
           <a href="#" class="delete-link" data-id="${book.id}" style="color:#c0392b;">
             <i class="fa-solid fa-trash"></i> Delete
           </a>
@@ -208,7 +208,7 @@ function attachActionListeners(books) {
 
       if (confirm(`Delete "${book ? book.title : "this book"}"? This cannot be undone.`)) {
         try {
-          const res = await fetch(`/api/books/${id}/`, {
+          const res = await fetch(`/api/books/${id}/delete/`, {
             method: "DELETE",
             credentials: "include",
             headers: { "X-CSRFToken": getCookie("csrftoken") },
