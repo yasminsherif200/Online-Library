@@ -55,7 +55,7 @@ overlay.addEventListener("click", () => {
 document.getElementById("logout-btn").addEventListener("click", async (e) => {
   e.preventDefault();
   try {
-    await fetch("api/auth/logout/", {
+    await fetch("/api/auth/logout/", {
       method: "POST",
       credentials: "include",
       headers: { "X-CSRFToken": getCookie("csrftoken") },

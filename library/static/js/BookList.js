@@ -106,7 +106,7 @@ async function loadBooks() {
   books.forEach((book) => {
     // Find active borrow for this book
     const activeBorrow = borrows.find(
-      (b) => b.bookId === book.id && !b.returnDate
+      (b) => String(b.bookId) === String(book.id) && !b.returnDate
     );
     const borrowerEmail = activeBorrow ? activeBorrow.userEmail : null;
 
