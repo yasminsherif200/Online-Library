@@ -43,8 +43,8 @@ function clearError(input) {
 });
 
 // Password strength indicator 
-const passwordInput  = document.getElementById("password");
-const passwordField  = passwordInput.closest(".field");
+const passwordInput = document.getElementById("password");
+const passwordField = passwordInput.closest(".field");
 
 const strengthBar = document.createElement("div");
 strengthBar.style.cssText = `
@@ -69,15 +69,15 @@ passwordField.appendChild(strengthBar);
 passwordField.appendChild(strengthLabel);
 
 passwordInput.addEventListener("input", () => {
-  const val      = passwordInput.value;
-  let score      = 0;
+  const val  = passwordInput.value;
+  let score  = 0;
 
-  if (val.length >= 8)            score++;
-  if (/[A-Z]/.test(val))          score++;
-  if (/[0-9]/.test(val))          score++;
-  if (/[^A-Za-z0-9]/.test(val))   score++;
+  if (val.length >= 8)           score++;
+  if (/[A-Z]/.test(val))         score++;
+  if (/[0-9]/.test(val))         score++;
+  if (/[^A-Za-z0-9]/.test(val))  score++;
 
-  const levels = [
+const levels = [
     { label: "",        color: "transparent", width: "0%" },
     { label: "Weak",    color: "#C0392B",     width: "33%" },
     { label: "Fair",    color: "#E67E22",     width: "66%" },
@@ -135,8 +135,12 @@ function validateSignup() {
   return valid;
 }
 
-// Handling Local Storage
-document.getElementById("signupForm").addEventListener("submit", function (e) {
+function getCsrfToken() {
+  return document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+}
+
+// Submit handler — calls Django API
+document.getElementById("signupForm").addEventListener("submit", async function (e) {
   e.preventDefault();
 
   if (!validateSignup()) return;
@@ -146,22 +150,41 @@ document.getElementById("signupForm").addEventListener("submit", function (e) {
   const password = document.getElementById("password").value;
   const isAdmin  = document.getElementById("checkbox").checked;
 
-  const result = registerUser(username, email, password, isAdmin);
+  const btn = document.querySelector(".sign-up-btn");
+  btn.disabled    = true;
+  btn.textContent = "Signing up...";
 
-  if (!result.success) {
-    alert(result.msg); // "Email already registered."
-    return;
-  }
+  try {
+    const response = await fetch("/api/auth/register/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": getCsrfToken(),
+      },
+      body: JSON.stringify({ username, email, password, is_admin: isAdmin }),
+    });
 
-  // Log them in immediately after registration
-  const user = { username, email, role: isAdmin ? "admin" : "user" };
-  setSession(user);
+    const data = await response.json();
 
-  alert("Registered successfully!");
+    if (!data.success) {
+      // Show the error message from the server under the email field
+      const emailInput = document.getElementById("email");
+      showError(emailInput, data.message);
+      return;
+    }
 
-  if (isAdmin) {
-    window.location.href = "AdminDashboard.html";
-  } else {
-    window.location.href = "User-Dashboard.html";
+    // Redirect based on role returned by the server
+    if (data.role === "admin") {
+      window.location.href = "/AdminDashboard/";
+    } else {
+      window.location.href = "/User-Dashboard/";
+    }
+
+  } catch (err) {
+    alert("Something went wrong. Please try again.");
+    console.error(err);
+  } finally {
+    btn.disabled    = false;
+    btn.textContent = "Sign Up";
   }
 });
