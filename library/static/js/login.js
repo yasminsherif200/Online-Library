@@ -42,7 +42,6 @@ function clearError(input) {
   document.getElementById(id).addEventListener("input", (e) => clearError(e.target));
 });
 
-
 // Form validation before submit
 function validateLogin() {
   const email    = document.getElementById("email");
@@ -68,8 +67,11 @@ function validateLogin() {
   return valid;
 }
 
+function getCsrfToken() {
+  return document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+}
 
-// Attach validation to both buttons
+// Attach validation + API call to both buttons
 document.querySelector(".user-btn").addEventListener("click", (e) => {
   e.preventDefault();
   if (validateLogin()) handleLogin("user");
@@ -80,29 +82,49 @@ document.querySelector(".admin-btn").addEventListener("click", (e) => {
   if (validateLogin()) handleLogin("admin");
 });
 
-// Handling Local Storage
-function handleLogin(role) {
-  const email    = document.getElementById("email");
-  const password = document.getElementById("password");
+// Calls Django login API
+async function handleLogin(role) {
+  const emailInput    = document.getElementById("email");
+  const passwordInput = document.getElementById("password");
 
-  const user = loginUser(email.value.trim(), password.value, role);
+  const email    = emailInput.value.trim();
+  const password = passwordInput.value;
 
-  if (!user) {
-    if (role === "admin") {
-      showError(email, "No admin account found with these credentials.");
-    } else {
-      showError(email, "Invalid email or password.");
+  // Disable both buttons while request is in flight
+  const userBtn  = document.querySelector(".user-btn");
+  const adminBtn = document.querySelector(".admin-btn");
+  userBtn.disabled  = true;
+  adminBtn.disabled = true;
+
+  try {
+    const response = await fetch("/api/auth/login/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": getCsrfToken(),
+      },
+      body: JSON.stringify({ email, password, role }),
+    });
+
+    const data = await response.json();
+
+    if (!data.success) {
+      showError(emailInput, data.message);
+      return;
     }
-    return;
-  }
 
-  // Save session
-  setSession(user);
+    // Redirect based on role returned by the server
+    if (data.role === "admin") {
+      window.location.href = "/AdminDashboard/";
+    } else {
+      window.location.href = "/User-Dashboard/";
+    }
 
-  // Redirect
-  if (user.role === "admin") {
-    window.location.href = "AdminDashboard.html";
-  } else {
-    window.location.href = "User-Dashboard.html";
+  } catch (err) {
+    alert("Something went wrong. Please try again.");
+    console.error(err);
+  } finally {
+    userBtn.disabled  = false;
+    adminBtn.disabled = false;
   }
 }
