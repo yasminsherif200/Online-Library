@@ -1,7 +1,7 @@
 // ─── Route Guard ───────────────────────────────────────────────────────────
 async function requireAdmin() {
   try {
-    const res = await fetch("/api/session/", { credentials: "include" });
+    const res = await fetch("/api/auth/me/", { credentials: "include" });
     if (!res.ok) {
       window.location.href = "/login/";
       return false;
@@ -39,7 +39,7 @@ overlay.addEventListener("click", () => {
 document.getElementById("logout-btn").addEventListener("click", async (e) => {
   e.preventDefault();
   try {
-    await fetch("/api/logout/", {
+    await fetch("api/auth/logout/", {
       method: "POST",
       credentials: "include",
       headers: { "X-CSRFToken": getCookie("csrftoken") },
@@ -78,9 +78,9 @@ async function loadStats() {
     document.getElementById("stat-total-books").textContent =
       stats.total_books ?? 0;
     document.getElementById("stat-borrowed").textContent =
-      stats.active_borrows ?? 0;
+      stats.borrowed ?? 0;
     document.getElementById("stat-available").textContent =
-      stats.available_books ?? (stats.total_books - stats.active_borrows) ?? 0;
+      stats.available ?? (stats.total_books - stats.borrowed) ?? 0;
     document.getElementById("stat-users").textContent =
       stats.total_users ?? 0;
   } catch (err) {
@@ -136,7 +136,7 @@ async function loadBooks() {
       <td style="position:relative;">
         <button class="action-btn" data-id="${book.id}">···</button>
         <div class="action-menu" id="menu-${book.id}" style="display:none;">
-          <a href="/edit-book/?id=${book.id}"><i class="fa-solid fa-pen"></i> Edit</a>
+          <a href="/Edit-Book/?id=${book.id}"><i class="fa-solid fa-pen"></i> Edit</a>
           <a href="#" class="delete-link" data-id="${book.id}">
             <i class="fa-solid fa-trash"></i> Delete
           </a>
@@ -184,7 +184,7 @@ function attachListeners(books) {
 
       if (confirm(`Delete "${book ? book.title : "this book"}"? This cannot be undone.`)) {
         try {
-          const res = await fetch(`/api/books/${id}/`, {
+          const res = await fetch(`/api/books/${id}/delete/`, {
             method: "DELETE",
             credentials: "include",
             headers: { "X-CSRFToken": getCookie("csrftoken") },
