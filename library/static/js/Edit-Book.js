@@ -1,5 +1,7 @@
 requireAdmin();
 
+const API_BASE = "http://127.0.0.1:8000";
+
 // Sidebar toggle
 const sidebarToggle = document.querySelector(".iconbar-btn");
 const sidebar = document.getElementById("sidebar");
@@ -24,23 +26,26 @@ document.getElementById("logout-btn").addEventListener("click", (e) => {
 });
 
 // Get book ID from URL
-const params = new URLSearchParams(window.location.search);
-const bookId = params.get("id");
+const params  = new URLSearchParams(window.location.search);
+const bookId  = params.get("id");
+const form    = document.getElementById("editBookForm");
+const notFound = document.getElementById("not-found-msg");
 
-const form       = document.getElementById("editBookForm");
-const notFound   = document.getElementById("not-found-msg");
-
-if (!bookId) {
-  notFound.classList.remove("hidden");
-} else {
-  const book = getBookById(bookId);
-
-  if (!book) {
+// Load book data from API
+async function loadBook() {
+  if (!bookId) {
     notFound.classList.remove("hidden");
-  } else {
+    return;
+  }
+
+  try {
+    const response = await fetch(`${API_BASE}/api/books/${bookId}/`);
+    if (!response.ok) throw new Error("Book not found");
+
+    const book = await response.json();
+
     // Show form and fill in current values
     form.classList.remove("hidden");
-
     document.getElementById("bookID").value          = book.id;
     document.getElementById("bookTitle").value       = book.title;
     document.getElementById("bookAuthor").value      = book.author;
@@ -59,8 +64,14 @@ if (!bookId) {
         break;
       }
     }
+
+  } catch (error) {
+    console.error("Error loading book:", error);
+    notFound.classList.remove("hidden");
   }
 }
+
+loadBook();
 
 // Preview new cover if uploaded
 document.getElementById("bookCover").addEventListener("change", function () {
@@ -74,7 +85,7 @@ document.getElementById("bookCover").addEventListener("change", function () {
 });
 
 // Save changes
-form.addEventListener("submit", (e) => {
+form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const title       = document.getElementById("bookTitle").value.trim();
@@ -90,26 +101,32 @@ form.addEventListener("submit", (e) => {
     return;
   }
 
-  const existingBook = getBookById(bookId);
-
+  // If a new cover was uploaded, convert to base64 then PUT
   if (file) {
     const reader = new FileReader();
-    reader.onload = (e) => {
-      updateBook({
-        ...existingBook,
-        title, author, isbn, genre, description,
-        cover: e.target.result
-      });
-      alert(`"${title}" updated successfully!`);
-      window.location.href = "Books-Management.html";
+    reader.onload = async (e) => {
+      await submitUpdateBook({ title, author, isbn, genre, description, cover: e.target.result });
     };
     reader.readAsDataURL(file);
   } else {
-    updateBook({
-      ...existingBook,
-      title, author, isbn, genre, description
-    });
-    alert(`"${title}" updated successfully!`);
-    window.location.href = "Books-Management.html";
+    await submitUpdateBook({ title, author, isbn, genre, description });
   }
 });
+
+async function submitUpdateBook(updatedData) {
+  try {
+    const response = await fetch(`${API_BASE}/api/books/${bookId}/update/`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updatedData),
+    });
+
+    if (!response.ok) throw new Error("Failed to update book");
+
+    alert(`"${updatedData.title}" updated successfully!`);
+    window.location.href = "/books-management/";
+  } catch (error) {
+    console.error("Error updating book:", error);
+    alert("Failed to update book. Please try again.");
+  }
+}
