@@ -1,45 +1,90 @@
-requireUser();
+// Route guard 
+async function requireUser() {
+  try {
+    const res = await fetch("/api/auth/me/", { credentials: "include" });
+    if (!res.ok) {
+      window.location.href = "/login/";
+      return null;
+    }
+    const user = await res.json();
+    if (!user || user.role !== "user") {
+      window.location.href = "/login/";
+      return null;
+    }
+    return user;
+  } catch {
+    window.location.href = "/login/";
+    return null;
+  }
+}
+function getCsrfToken() {
+  return (
+    document
+      .querySelector('meta[name="csrf-token"]')
+      ?.getAttribute("content") || ""
+  );
+}
+let currentSession = null;
 
-const session = getSession();
+(async () => {
+  currentSession = await requireUser();
+  if (!currentSession) return;
 
-document.getElementById("logout-btn").addEventListener("click", (e) => {
-  e.preventDefault();
-  logout();
-});
+  document.getElementById("logout-btn").addEventListener("click", async (e) => {
+    e.preventDefault();
+    await fetch("/api/auth/logout/", {
+      method: "POST",
+      credentials: "include",
+      headers: { "X-CSRFToken": getCsrfToken() },
+    });
+    window.location.href = "/login/";
+  });
 
-window.addEventListener("load", () => {
   const params = new URLSearchParams(window.location.search);
   const query = params.get("query");
   if (query) {
     document.getElementById("search-title").value = query;
-    runSearch();
+    await runSearch();
   }
-});
+})();
 
-document.getElementById("searchForm").addEventListener("submit", (e) => {
+//Search form 
+document.getElementById("searchForm").addEventListener("submit", async (e) => {
   e.preventDefault();
-  runSearch();
+  await runSearch();
 });
 
-function runSearch() {
-  const titleQuery  = document.getElementById("search-title").value.trim().toLowerCase();
-  const authorQuery = document.getElementById("search-author").value.trim().toLowerCase();
-  const genreQuery  = document.getElementById("search-genre").value.toLowerCase();
+async function runSearch() {
+  const titleQuery = document.getElementById("search-title").value.trim();
+  const authorQuery = document.getElementById("search-author").value.trim();
+  const genreQuery = document.getElementById("search-genre").value;
 
-  const results = getBooks().filter(book => {
-    const matchTitle  = titleQuery  ? book.title.toLowerCase().includes(titleQuery)   : true;
-    const matchAuthor = authorQuery ? book.author.toLowerCase().includes(authorQuery) : true;
-    const matchGenre  = genreQuery  ? book.genre.toLowerCase() === genreQuery         : true;
-    return matchTitle && matchAuthor && matchGenre;
-  });
+  const params = new URLSearchParams();
+  if (titleQuery) params.set("q", titleQuery);
+  if (authorQuery) params.set("author", authorQuery);
+  if (genreQuery) params.set("genre", genreQuery);
+
+  let results = [];
+  try {
+    const res = await fetch(
+      `/api/books/search/?${params.toString()}`,
+      { credentials: "include" }
+    );
+    if (res.ok) {
+      results = await res.json();
+    }
+  } catch {
+
+  }
 
   displayResults(results);
 }
 
+//displayResults 
 function displayResults(results) {
-  const section  = document.getElementById("results-section");
-  const tbody    = document.getElementById("results-tbody");
-  const noMsg    = document.getElementById("no-results-msg");
+  const section = document.getElementById("results-section");
+  const tbody = document.getElementById("results-tbody");
+  const noMsg = document.getElementById("no-results-msg");
   const countMsg = document.getElementById("results-count");
 
   tbody.innerHTML = "";
@@ -52,37 +97,54 @@ function displayResults(results) {
 
   noMsg.classList.add("hidden");
   section.classList.remove("hidden");
-  countMsg.textContent = `${results.length} book${results.length !== 1 ? "s" : ""} found`;
+  countMsg.textContent = `${results.length} book${
+    results.length !== 1 ? "s" : ""
+  } found`;
 
-  results.forEach(book => {
+  results.forEach((book) => {
     const tr = document.createElement("tr");
     tr.innerHTML = `
       <td><strong>${book.title}</strong></td>
       <td>${book.author}</td>
       <td>${book.genre}</td>
-      <td class="${book.available ? 'status-available' : 'status-unavailable'}">
+      <td class="${book.available ? "status-available" : "status-unavailable"}">
         ${book.available ? "Available" : "On Loan"}
       </td>
       <td>
-        ${book.available
-          ? `<button class="btn borrow-btn" data-id="${book.id}">Borrow</button>`
-          : `<span class="unavailable-text">Unavailable</span>`
+        ${
+          book.available
+            ? `<button class="btn borrow-btn" data-id="${book.id}">Borrow</button>`
+            : `<span class="unavailable-text">Unavailable</span>`
         }
       </td>
     `;
     tbody.appendChild(tr);
   });
 
-  document.querySelectorAll(".borrow-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const book = getBookById(btn.dataset.id);
-      if (confirm(`Borrow "${book.title}"?`)) {
-        const result = borrowBook(btn.dataset.id, session.email);
-        if (result.success) {
-          alert(`"${book.title}" added to your library!`);
-          runSearch();
-        } else {
-          alert(result.msg);
+  //Borrow button logic 
+  document.querySelectorAll(".borrow-btn").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const bookId = btn.dataset.id;
+      const book = results.find((b) => b.id === bookId);
+      if (confirm(`Borrow "${book?.title}"?`)) {
+        try {
+          const res = await fetch(`/api/books/${bookId}/borrow/`, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": getCsrfToken(),
+            },
+          });
+          const data = await res.json();
+          if (res.ok && data.success) {
+            alert(`"${book?.title}" added to your library!`);
+            await runSearch();
+          } else {
+            alert(data.msg || "Could not borrow book. Please try again.");
+          }
+        } catch {
+          alert("Network error. Please try again.");
         }
       }
     });
