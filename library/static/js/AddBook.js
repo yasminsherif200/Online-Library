@@ -1,102 +1,83 @@
-requireAdmin();
 
-// ─── CSRF Token ───────────────────────────────────────────────────────────────
-function getCSRFToken() {
-  return document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
 }
 
-// ─── Sidebar toggle ───────────────────────────────────────────────────────────
+
 const sidebarToggle = document.querySelector(".iconbar-btn");
 const sidebar = document.getElementById("sidebar");
 const overlay = document.getElementById("overlay");
 
-sidebarToggle.addEventListener("click", () => {
-  sidebar.classList.toggle("open");
-  overlay.classList.toggle("show");
-  sidebarToggle.classList.toggle("active");
-});
-
-overlay.addEventListener("click", () => {
-  sidebar.classList.remove("open");
-  overlay.classList.remove("show");
-  sidebarToggle.classList.remove("active");
-});
-
-// ─── Logout ───────────────────────────────────────────────────────────────────
-document.getElementById("logout-btn").addEventListener("click", async (e) => {
-  e.preventDefault();
-  try {
-    await fetch("/api/auth/logout/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": getCSRFToken(),
-      },
+if (sidebarToggle) {
+    sidebarToggle.addEventListener("click", () => {
+        sidebar.classList.toggle("open");
+        overlay.classList.toggle("show");
+        sidebarToggle.classList.toggle("active");
     });
-  } catch (err) {
-    console.error("Logout error:", err);
-  }
-  window.location.href = "/login/";
-});
+}
 
-// ─── Preview image when selected ─────────────────────────────────────────────
-document.getElementById("book_cover").addEventListener("change", function () {
-  const file = this.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = function (e) {
-    const preview = document.getElementById("cover-preview");
-    preview.src = e.target.result;
-    preview.classList.remove("hidden");
-  };
-  reader.readAsDataURL(file);
-});
 
-// ─── Add book form ────────────────────────────────────────────────────────────
-document.getElementById("add-book-form").addEventListener("submit", async (e) => {
-  e.preventDefault();
+const addForm = document.getElementById("add-book-form");
+if (addForm) {
+    addForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
 
-  const title       = document.getElementById("book_title").value.trim();
-  const author      = document.getElementById("book_author").value.trim();
-  const isbn        = document.getElementById("book_isbn").value.trim();
-  const genre       = document.getElementById("book_genre").value;
-  const description = document.getElementById("book_description").value.trim();
-  const fileInput   = document.getElementById("book_cover");
-  const file        = fileInput.files[0];
+        
+        const title = document.getElementById("book_title").value.trim();
+        const author = document.getElementById("book_author").value.trim();
+        const isbn = document.getElementById("book_isbn").value.trim();
+        const genre = document.getElementById("book_genre").value;
+        const description = document.getElementById("book_description").value.trim();
 
-  if (!title || !author || !genre) {
-    alert("Please fill in Title, Author, and Genre.");
-    return;
-  }
+        
+        if (!title || !author || !genre) {
+            alert("Title, Author, and Genre are required!");
+            return;
+        }
 
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = async function (e) {
-      await submitAddBook({ title, author, isbn, genre, description, cover: e.target.result });
-    };
-    reader.readAsDataURL(file);
-  } else {
-    await submitAddBook({ title, author, isbn, genre, description, cover: "imgs/book1.png" });
-  }
-});
+        
+        const bookData = {
+            title: title,
+            author: author,
+            isbn: isbn,
+            genre: genre,
+            description: description,
+            cover: "" 
+        };
 
-async function submitAddBook(bookData) {
-  try {
-    const response = await fetch("/api/books/add/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": getCSRFToken(),
-      },
-      body: JSON.stringify(bookData),
+        try {
+            
+           const response = await fetch('http://127.0.0.1:8000/api/books/add/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify(bookData)
+            });
+
+            const result = await response.json();
+
+            if (response.ok && result.success) {
+                alert(`"${title}" added successfully!`);
+                window.location.href = "/Books-Management/"; 
+            } else {
+                alert("Error: " + (result.message || "Method Not Allowed"));
+            }
+        } catch (error) {
+            console.error("Network Error:", error);
+            alert("Connection error with server.");
+        }
     });
-
-    if (!response.ok) throw new Error("Failed to add book");
-
-    alert(`"${bookData.title}" has been added to the archive!`);
-    window.location.href = "/Books-Management/";
-  } catch (error) {
-    console.error("Error adding book:", error);
-    alert("Failed to add book. Please try again.");
-  }
 }
