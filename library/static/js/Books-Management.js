@@ -1,13 +1,4 @@
-requireAdmin();
 
-const API_BASE = "";
-
-// ─── CSRF Token ───────────────────────────────────────────────────────────────
-function getCSRFToken() {
-  return document.querySelector('meta[name="csrf-token"]').getAttribute("content");
-}
-
-// ─── Sidebar toggle ───────────────────────────────────────────────────────────
 const sidebarToggle = document.querySelector(".iconbar-btn");
 const sidebar = document.getElementById("sidebar");
 const overlay = document.getElementById("overlay");
@@ -24,32 +15,23 @@ overlay.addEventListener("click", () => {
   sidebarToggle.classList.remove("active");
 });
 
-// ─── Logout ───────────────────────────────────────────────────────────────────
-document.getElementById("logout-btn").addEventListener("click", async (e) => {
+// Logout
+document.getElementById("logout-btn").addEventListener("click", (e) => {
   e.preventDefault();
-  try {
-    await fetch("/api/auth/logout/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": getCSRFToken(),
-      },
-    });
-  } catch (err) {
-    console.error("Logout error:", err);
-  }
-  window.location.href = "/login/";
+  logout();
 });
 
-// ─── Load books ───────────────────────────────────────────────────────────────
+
+
+// Load books from Django API
 async function loadBooks() {
   const tbody = document.getElementById("books-tbody");
-
+  
   try {
-    const response = await fetch("/api/books/");
-    if (!response.ok) throw new Error("Failed to fetch books");
-
+    
+    const response = await fetch('/api/books/');
     const books = await response.json();
+
     tbody.innerHTML = "";
 
     if (books.length === 0) {
@@ -61,26 +43,23 @@ async function loadBooks() {
       return;
     }
 
-    books.forEach((book) => {
+    books.forEach(book => {
       const tr = document.createElement("tr");
       tr.innerHTML = `
-        <td class="catalog-ref">#${String(book.id).toUpperCase()}</td>
+        <td class="catalog-ref">#${book.id}</td>
         <td><strong>${book.title}</strong></td>
         <td>${book.author}</td>
         <td>${book.genre}</td>
         <td>
-          <span class="badge ${book.available ? "badge-available" : "badge-borrowed"}">
-            ${book.available ? "Available" : "Borrowed"}
+          <span class="badge ${book.available ? 'badge-available' : 'badge-borrowed'}">
+            ${book.available ? 'Available' : 'Borrowed'}
           </span>
         </td>
         <td class="actions-cell">
           <a href="/Edit-Book/?id=${book.id}" class="btn edit-btn">
             <i class="fa-solid fa-pen"></i> Edit
           </a>
-          <button class="btn delete-btn"
-            data-id="${book.id}"
-            data-title="${book.title}"
-            data-available="${book.available}">
+          <button class="btn delete-btn" data-id="${book.id}" data-title="${book.title}" data-available="${book.available}">
             <i class="fa-solid fa-trash"></i> Delete
           </button>
         </td>
@@ -91,51 +70,65 @@ async function loadBooks() {
     document.getElementById("books-count").textContent =
       `${books.length} book${books.length !== 1 ? "s" : ""} in archive`;
 
-    // Delete buttons
-    document.querySelectorAll(".delete-btn").forEach((btn) => {
-      btn.addEventListener("click", async () => {
-        const available = btn.dataset.available === "true";
-        const title     = btn.dataset.title;
-        const id        = btn.dataset.id;
-
-        if (!available) {
-          alert("Cannot delete a book that is currently borrowed.");
-          return;
-        }
-        if (confirm(`Delete "${title}"? This cannot be undone.`)) {
-          await deleteBook(id, title);
-        }
-      });
-    });
+    
+    attachDeleteEvents();
 
   } catch (error) {
     console.error("Error loading books:", error);
-    tbody.innerHTML = `
-      <tr>
-        <td colspan="6" class="empty-msg">Failed to load books. Please try again.</td>
-      </tr>`;
+    tbody.innerHTML = `<tr><td colspan="6" class="empty-msg">Error loading books from server.</td></tr>`;
   }
 }
 
-// ─── Delete book ──────────────────────────────────────────────────────────────
-async function deleteBook(bookId, title) {
-  try {
-    const response = await fetch(`/api/books/${bookId}/delete/`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": getCSRFToken(),
-      },
+function attachDeleteEvents() {
+  document.querySelectorAll(".delete-btn").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const bookId = btn.dataset.id;
+      const bookTitle = btn.dataset.title;
+      const isAvailable = btn.dataset.available === "true";
+
+      if (!isAvailable) {
+        alert("Cannot delete a book that is currently borrowed.");
+        return;
+      }
+
+      if (confirm(`Delete "${bookTitle}"? This cannot be undone.`)) {
+        try {
+          
+          const response = await fetch(`/api/books/${bookId}/delete/`, {
+            method: 'DELETE',
+            headers: {
+              'X-CSRFToken': getCookie('csrftoken') 
+            }
+          });
+
+          if (response.ok) {
+            alert("Book deleted successfully.");
+            loadBooks(); 
+          } else {
+            alert("Failed to delete the book.");
+          }
+        } catch (error) {
+          console.error("Error deleting book:", error);
+        }
+      }
     });
+  });
+}
 
-    if (!response.ok) throw new Error("Failed to delete book");
 
-    alert("Book deleted successfully.");
-    loadBooks();
-  } catch (error) {
-    console.error("Error deleting book:", error);
-    alert("Failed to delete book. Please try again.");
-  }
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
 }
 
 loadBooks();
