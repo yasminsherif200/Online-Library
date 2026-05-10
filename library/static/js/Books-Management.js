@@ -1,8 +1,13 @@
 requireAdmin();
 
-const API_BASE = "http://127.0.0.1:8000";
+const API_BASE = "";
 
-// Sidebar toggle
+// ─── CSRF Token ───────────────────────────────────────────────────────────────
+function getCSRFToken() {
+  return document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+}
+
+// ─── Sidebar toggle ───────────────────────────────────────────────────────────
 const sidebarToggle = document.querySelector(".iconbar-btn");
 const sidebar = document.getElementById("sidebar");
 const overlay = document.getElementById("overlay");
@@ -19,18 +24,29 @@ overlay.addEventListener("click", () => {
   sidebarToggle.classList.remove("active");
 });
 
-// Logout
-document.getElementById("logout-btn").addEventListener("click", (e) => {
+// ─── Logout ───────────────────────────────────────────────────────────────────
+document.getElementById("logout-btn").addEventListener("click", async (e) => {
   e.preventDefault();
-  logout();
+  try {
+    await fetch("/api/auth/logout/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": getCSRFToken(),
+      },
+    });
+  } catch (err) {
+    console.error("Logout error:", err);
+  }
+  window.location.href = "/login/";
 });
 
-// Load books
+// ─── Load books ───────────────────────────────────────────────────────────────
 async function loadBooks() {
   const tbody = document.getElementById("books-tbody");
 
   try {
-    const response = await fetch(`${API_BASE}/api/books/`);
+    const response = await fetch("/api/books/");
     if (!response.ok) throw new Error("Failed to fetch books");
 
     const books = await response.json();
@@ -58,10 +74,13 @@ async function loadBooks() {
           </span>
         </td>
         <td class="actions-cell">
-          <a href="/edit-book/?id=${book.id}" class="btn edit-btn">
+          <a href="/Edit-Book/?id=${book.id}" class="btn edit-btn">
             <i class="fa-solid fa-pen"></i> Edit
           </a>
-          <button class="btn delete-btn" data-id="${book.id}" data-title="${book.title}" data-available="${book.available}">
+          <button class="btn delete-btn"
+            data-id="${book.id}"
+            data-title="${book.title}"
+            data-available="${book.available}">
             <i class="fa-solid fa-trash"></i> Delete
           </button>
         </td>
@@ -76,16 +95,15 @@ async function loadBooks() {
     document.querySelectorAll(".delete-btn").forEach((btn) => {
       btn.addEventListener("click", async () => {
         const available = btn.dataset.available === "true";
-        const title = btn.dataset.title;
-        const id = btn.dataset.id;
+        const title     = btn.dataset.title;
+        const id        = btn.dataset.id;
 
         if (!available) {
           alert("Cannot delete a book that is currently borrowed.");
           return;
         }
-
         if (confirm(`Delete "${title}"? This cannot be undone.`)) {
-          await deleteBook(id);
+          await deleteBook(id, title);
         }
       });
     });
@@ -99,11 +117,15 @@ async function loadBooks() {
   }
 }
 
-async function deleteBook(bookId) {
+// ─── Delete book ──────────────────────────────────────────────────────────────
+async function deleteBook(bookId, title) {
   try {
-    const response = await fetch(`${API_BASE}/api/books/${bookId}/delete/`, {
+    const response = await fetch(`/api/books/${bookId}/delete/`, {
       method: "DELETE",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": getCSRFToken(),
+      },
     });
 
     if (!response.ok) throw new Error("Failed to delete book");
