@@ -82,8 +82,10 @@ async function loadBook() {
       credentials: "include",
     });
     if (!response.ok) throw new Error("Book not found");
+    const book = await response.json();
 
 
+    notFound.classList.add("hidden");
     form.classList.remove("hidden");
     document.getElementById("bookID").value = book.id;
     document.getElementById("bookTitle").value = book.title;
