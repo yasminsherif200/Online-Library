@@ -1,8 +1,11 @@
 requireAdmin();
 
-const API_BASE = "http://127.0.0.1:8000";
+// ─── CSRF Token ───────────────────────────────────────────────────────────────
+function getCSRFToken() {
+  return document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+}
 
-// Sidebar toggle
+// ─── Sidebar toggle ───────────────────────────────────────────────────────────
 const sidebarToggle = document.querySelector(".iconbar-btn");
 const sidebar = document.getElementById("sidebar");
 const overlay = document.getElementById("overlay");
@@ -19,13 +22,24 @@ overlay.addEventListener("click", () => {
   sidebarToggle.classList.remove("active");
 });
 
-// Logout
-document.getElementById("logout-btn").addEventListener("click", (e) => {
+// ─── Logout ───────────────────────────────────────────────────────────────────
+document.getElementById("logout-btn").addEventListener("click", async (e) => {
   e.preventDefault();
-  logout();
+  try {
+    await fetch("/api/auth/logout/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": getCSRFToken(),
+      },
+    });
+  } catch (err) {
+    console.error("Logout error:", err);
+  }
+  window.location.href = "/login/";
 });
 
-// Preview image when selected
+// ─── Preview image when selected ─────────────────────────────────────────────
 document.getElementById("book_cover").addEventListener("change", function () {
   const file = this.files[0];
   if (!file) return;
@@ -38,7 +52,7 @@ document.getElementById("book_cover").addEventListener("change", function () {
   reader.readAsDataURL(file);
 });
 
-// Add book form
+// ─── Add book form ────────────────────────────────────────────────────────────
 document.getElementById("add-book-form").addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -55,7 +69,6 @@ document.getElementById("add-book-form").addEventListener("submit", async (e) =>
     return;
   }
 
-  // If a cover image was selected, convert to base64 then POST
   if (file) {
     const reader = new FileReader();
     reader.onload = async function (e) {
@@ -69,16 +82,19 @@ document.getElementById("add-book-form").addEventListener("submit", async (e) =>
 
 async function submitAddBook(bookData) {
   try {
-    const response = await fetch(`${API_BASE}/api/books/add/`, {
+    const response = await fetch("/api/books/add/", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": getCSRFToken(),
+      },
       body: JSON.stringify(bookData),
     });
 
     if (!response.ok) throw new Error("Failed to add book");
 
     alert(`"${bookData.title}" has been added to the archive!`);
-    window.location.href = "/books-management/";
+    window.location.href = "/Books-Management/";
   } catch (error) {
     console.error("Error adding book:", error);
     alert("Failed to add book. Please try again.");
