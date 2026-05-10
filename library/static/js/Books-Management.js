@@ -1,3 +1,36 @@
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== "") {
+    const cookies = document.cookie.split(";");
+    for (let cookie of cookies) {
+      cookie = cookie.trim();
+      if (cookie.startsWith(name + "=")) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+
+async function requireAdmin() {
+  try {
+    const res = await fetch("/api/auth/me/", { credentials: "include" });
+    if (!res.ok) {
+      window.location.href = "/login/";
+      return false;
+    }
+    const data = await res.json();
+    if (!data || data.role !== "admin") {
+      window.location.href = "/login/";
+      return false;
+    }
+    return true;
+  } catch {
+    window.location.href = "/login/";
+    return false;
+  }
+}
 
 const sidebarToggle = document.querySelector(".iconbar-btn");
 const sidebar = document.getElementById("sidebar");
@@ -15,21 +48,48 @@ overlay.addEventListener("click", () => {
   sidebarToggle.classList.remove("active");
 });
 
-// Logout
-document.getElementById("logout-btn").addEventListener("click", (e) => {
+document.getElementById("logout-btn").addEventListener("click", async (e) => {
   e.preventDefault();
-  logout();
+  try {
+    await fetch("/api/auth/logout/", {
+      method: "POST",
+      credentials: "include",
+      headers: { "X-CSRFToken": getCookie("csrftoken") },
+    });
+  } catch (err) {
+    console.error(err);
+  }
+  window.location.href = "/";
 });
 
+async function deleteBook(bookId) {
+  try {
+    const response = await fetch(`/api/books/${encodeURIComponent(bookId)}/delete/`, {
+      method: "DELETE",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": getCookie("csrftoken") || "",
+      },
+    });
 
+    if (!response.ok) throw new Error("Failed to delete book");
 
-// Load books from Django API
+    alert("Book deleted successfully.");
+    loadBooks();
+  } catch (error) {
+    console.error("Error deleting book:", error);
+    alert("Failed to delete book. Please try again.");
+  }
+}
+
 async function loadBooks() {
   const tbody = document.getElementById("books-tbody");
   
   try {
-    
-    const response = await fetch('/api/books/');
+    const response = await fetch("/api/books/", { credentials: "include" });
+    if (!response.ok) throw new Error("Failed to fetch books");
+
     const books = await response.json();
 
     tbody.innerHTML = "";
@@ -70,65 +130,29 @@ async function loadBooks() {
     document.getElementById("books-count").textContent =
       `${books.length} book${books.length !== 1 ? "s" : ""} in archive`;
 
-    
-    attachDeleteEvents();
+    document.querySelectorAll(".delete-btn").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const available = btn.dataset.available === "true";
+        const title = btn.dataset.title;
+        const id = btn.dataset.id;
 
+        if (!available) {
+          alert("Cannot delete a book that is currently borrowed.");
+          return;
+        }
+
+        if (confirm(`Delete "${title}"? This cannot be undone.`)) {
+          await deleteBook(id);
+        }
+      });
+    });
   } catch (error) {
     console.error("Error loading books:", error);
     tbody.innerHTML = `<tr><td colspan="6" class="empty-msg">Error loading books from server.</td></tr>`;
   }
 }
 
-function attachDeleteEvents() {
-  document.querySelectorAll(".delete-btn").forEach(btn => {
-    btn.addEventListener("click", async () => {
-      const bookId = btn.dataset.id;
-      const bookTitle = btn.dataset.title;
-      const isAvailable = btn.dataset.available === "true";
-
-      if (!isAvailable) {
-        alert("Cannot delete a book that is currently borrowed.");
-        return;
-      }
-
-      if (confirm(`Delete "${bookTitle}"? This cannot be undone.`)) {
-        try {
-          
-          const response = await fetch(`/api/books/${bookId}/delete/`, {
-            method: 'DELETE',
-            headers: {
-              'X-CSRFToken': getCookie('csrftoken') 
-            }
-          });
-
-          if (response.ok) {
-            alert("Book deleted successfully.");
-            loadBooks(); 
-          } else {
-            alert("Failed to delete the book.");
-          }
-        } catch (error) {
-          console.error("Error deleting book:", error);
-        }
-      }
-    });
-  });
-}
-
-
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
-
-loadBooks();
+(async () => {
+  const ok = await requireAdmin();
+  if (ok) loadBooks();
+})();

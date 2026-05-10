@@ -23,13 +23,13 @@ urlpatterns = [
     path('api/auth/logout/', views.logout_view, name='logout'),
     path('api/auth/me/', views.me, name='me'),
 
-    # Books urls
-    path('api/books/', views.books_list, name='book_list'),
+    # Books urls — static segments before <book_id> so "add", "search", etc. are not captured as IDs
     path('api/books/add/', views.add_book, name='add_book'),
-    path('api/books/<str:book_id>/', views.book_detail, name='book_detail'),
+    path('api/books/search/', views.search_books, name='search_books'),
     path('api/books/<str:book_id>/update/', views.update_book, name='update_book'),
     path('api/books/<str:book_id>/delete/', views.delete_book, name='delete_book'),
-    path('api/books/search/', views.search_books, name='search_books'),
+    path('api/books/<str:book_id>/', views.book_detail, name='book_detail'),
+    path('api/books/', views.books_list, name='book_list'),
 
     # Borrows urls
     path('api/borrows/', views.borrow_book, name='borrow_book'),

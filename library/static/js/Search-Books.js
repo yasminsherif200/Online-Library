@@ -60,7 +60,7 @@ async function runSearch() {
   const genreQuery = document.getElementById("search-genre").value;
 
   const params = new URLSearchParams();
-  if (titleQuery) params.set("q", titleQuery);
+  if (titleQuery) params.set("title", titleQuery);
   if (authorQuery) params.set("author", authorQuery);
   if (genreQuery) params.set("genre", genreQuery);
 
@@ -128,20 +128,21 @@ function displayResults(results) {
       const book = results.find((b) => b.id === bookId);
       if (confirm(`Borrow "${book?.title}"?`)) {
         try {
-          const res = await fetch(`/api/books/${bookId}/borrow/`, {
+          const res = await fetch("/api/borrows/", {
             method: "POST",
             credentials: "include",
             headers: {
               "Content-Type": "application/json",
               "X-CSRFToken": getCsrfToken(),
             },
+            body: JSON.stringify({ book_id: bookId }),
           });
           const data = await res.json();
           if (res.ok && data.success) {
             alert(`"${book?.title}" added to your library!`);
             await runSearch();
           } else {
-            alert(data.msg || "Could not borrow book. Please try again.");
+            alert(data.message || "Could not borrow book. Please try again.");
           }
         } catch {
           alert("Network error. Please try again.");

@@ -1,165 +1,141 @@
-// must be logged in as user 
-requireUser();
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== "") {
+    const cookies = document.cookie.split(";");
+    for (let cookie of cookies) {
+      cookie = cookie.trim();
+      if (cookie.startsWith(name + "=")) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
 
-const session = getSession();
+async function requireUserSession() {
+  try {
+    const res = await fetch("/api/auth/me/", { credentials: "include" });
+    if (!res.ok) {
+      window.location.href = "/login/";
+      return null;
+    }
+    const user = await res.json();
+    if (!user.success || user.role !== "user") {
+      window.location.href = "/login/";
+      return null;
+    }
+    return user;
+  } catch {
+    window.location.href = "/login/";
+    return null;
+  }
+}
 
-// Logout
-document.getElementById("logout-btn").addEventListener("click", (e) => {
-
-  e.preventDefault();
-
-  logout();
-
-  
-  window.location.href = "/login/";
-
-});
-
-
-// load books from  Django API 
 async function loadBooks() {
-
   const tbody = document.getElementById("books-tbody");
-
   tbody.innerHTML = "";
 
   try {
-
-    // GET books from Django API
-    const response = await fetch("/api/books/");
+    const response = await fetch("/api/books/", { credentials: "include" });
+    if (!response.ok) throw new Error("Failed to load books");
 
     const books = await response.json();
 
-    // If there are no books 
     if (books.length === 0) {
-
       tbody.innerHTML = `
         <tr>
-          <td colspan="6"
-              style="text-align:center; padding:30px; color:#aaa;">
+          <td colspan="6" style="text-align:center; padding:30px; color:#aaa;">
             No books available yet.
           </td>
-        </tr>
-      `;
-
+        </tr>`;
       return;
     }
 
-    // Book display
-    books.forEach(book => {
-
+    books.forEach((book) => {
       const tr = document.createElement("tr");
+      const desc = book.description || "";
+      const shortDesc = desc.length > 50 ? desc.substring(0, 50) + "..." : desc;
 
       tr.innerHTML = `
         <td class="book-info">
-
-          <img
-            src="${book.cover}"
-            class="book-cover"
-            onerror="this.style.display='none'"
-          >
-
+          <img src="${book.cover || ""}" class="book-cover" onerror="this.style.display='none'">
           <strong>${book.title}</strong>
-
         </td>
-
         <td>${book.author}</td>
-
+        <td><span class="tag">${book.genre}</span></td>
+        <td>${shortDesc}</td>
         <td>
-          <span class="tag">${book.genre}</span>
-        </td>
-
-        <td>
-          ${book.description.substring(0, 50)}...
-        </td>
-
-        <td>
-
-          <span class="status ${book.available ? 'available' : 'on-loan'}">
-
-            ● ${book.available ? 'Available' : 'On Loan'}
-
+          <span class="status ${book.available ? "available" : "on-loan"}">
+            ● ${book.available ? "Available" : "On Loan"}
           </span>
-
         </td>
-
         <td>
-
           ${
             book.available
-
-            ? `<a href="#"
-                 class="borrow-link"
-                 data-id="${book.id}">
-                 Borrow
-               </a>`
-
-            : `<span style="color:#aaa; font-size:0.85rem;">
-                 Unavailable
-               </span>`
+              ? `<a href="#" class="borrow-link" data-id="${book.id}">Borrow</a>`
+              : `<span style="color:#aaa; font-size:0.85rem;">Unavailable</span>`
           }
-
-        </td>
-      `;
-
+        </td>`;
       tbody.appendChild(tr);
-
     });
 
-    // borrow buttons
-    document.querySelectorAll(".borrow-link").forEach(link => {
-
+    document.querySelectorAll(".borrow-link").forEach((link) => {
       link.addEventListener("click", async (e) => {
-
         e.preventDefault();
-
         const bookId = link.dataset.id;
+        const book = books.find((b) => String(b.id) === String(bookId));
+        if (!confirm(`Borrow "${book?.title}"?`)) return;
 
-        // POST borrow request
-        const response = await fetch("/api/borrows/", {
-
-          method: "POST",
-
-          headers: {
-            "Content-Type": "application/json"
-          },
-
-          body: JSON.stringify({
-            book_id: bookId
-          })
-
-        });
-
-        // if the process successful 
-        if (response.ok) {
-
-          alert("Book borrowed successfully!");
-
-          // refresh
-          loadBooks();
-
-        } else {
-
-          alert("Failed to borrow book.");
-
+        try {
+          const response = await fetch("/api/borrows/", {
+            method: "POST",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": getCookie("csrftoken") || "",
+            },
+            body: JSON.stringify({ book_id: bookId }),
+          });
+          const data = await response.json().catch(() => ({}));
+          if (response.ok && data.success) {
+            alert("Book borrowed successfully!");
+            loadBooks();
+          } else {
+            alert(data.message || "Failed to borrow book.");
+          }
+        } catch (err) {
+          console.error(err);
+          alert("Something went wrong. Please try again.");
         }
-
       });
-
     });
-
   } catch (error) {
-
     console.error(error);
-
     tbody.innerHTML = `
       <tr>
-        <td colspan="6">
-          Error loading books.
-        </td>
-      </tr>
-    `;
+        <td colspan="6">Error loading books.</td>
+      </tr>`;
   }
-
 }
-loadBooks();
+
+(async () => {
+  const session = await requireUserSession();
+  if (!session) return;
+
+  document.getElementById("logout-btn").addEventListener("click", async (e) => {
+    e.preventDefault();
+    try {
+      await fetch("/api/auth/logout/", {
+        method: "POST",
+        credentials: "include",
+        headers: { "X-CSRFToken": getCookie("csrftoken") || "" },
+      });
+    } catch (err) {
+      console.error(err);
+    }
+    window.location.href = "/login/";
+  });
+
+  await loadBooks();
+})();

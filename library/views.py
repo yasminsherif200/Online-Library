@@ -380,6 +380,15 @@ def my_borrows(request):
             'genre': borrow.book.genre,
             'cover': borrow.book.cover,
             'borrow_date': borrow.borrow_date.strftime('%Y-%m-%d'),
+            'book': {
+                'id': borrow.book.id,
+                'title': borrow.book.title,
+                'author': borrow.book.author,
+                'genre': borrow.book.genre,
+                'cover': borrow.book.cover,
+                'description': borrow.book.description,
+                'available': borrow.book.available,
+            },
         }
         for borrow in borrows
     ]
