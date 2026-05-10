@@ -1,8 +1,11 @@
 requireAdmin();
 
-const API_BASE = "http://127.0.0.1:8000";
+// ─── CSRF Token ───────────────────────────────────────────────────────────────
+function getCSRFToken() {
+  return document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+}
 
-// Sidebar toggle
+// ─── Sidebar toggle ───────────────────────────────────────────────────────────
 const sidebarToggle = document.querySelector(".iconbar-btn");
 const sidebar = document.getElementById("sidebar");
 const overlay = document.getElementById("overlay");
@@ -19,19 +22,30 @@ overlay.addEventListener("click", () => {
   sidebarToggle.classList.remove("active");
 });
 
-// Logout
-document.getElementById("logout-btn").addEventListener("click", (e) => {
+// ─── Logout ───────────────────────────────────────────────────────────────────
+document.getElementById("logout-btn").addEventListener("click", async (e) => {
   e.preventDefault();
-  logout();
+  try {
+    await fetch("/api/auth/logout/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": getCSRFToken(),
+      },
+    });
+  } catch (err) {
+    console.error("Logout error:", err);
+  }
+  window.location.href = "/login/";
 });
 
-// Get book ID from URL
-const params  = new URLSearchParams(window.location.search);
-const bookId  = params.get("id");
-const form    = document.getElementById("editBookForm");
+// ─── Get book ID from URL ─────────────────────────────────────────────────────
+const params   = new URLSearchParams(window.location.search);
+const bookId   = params.get("id");
+const form     = document.getElementById("editBookForm");
 const notFound = document.getElementById("not-found-msg");
 
-// Load book data from API
+// ─── Load book data from API ──────────────────────────────────────────────────
 async function loadBook() {
   if (!bookId) {
     notFound.classList.remove("hidden");
@@ -39,12 +53,11 @@ async function loadBook() {
   }
 
   try {
-    const response = await fetch(`${API_BASE}/api/books/${bookId}/`);
+    const response = await fetch(`/api/books/${bookId}/`);
     if (!response.ok) throw new Error("Book not found");
 
     const book = await response.json();
 
-    // Show form and fill in current values
     form.classList.remove("hidden");
     document.getElementById("bookID").value          = book.id;
     document.getElementById("bookTitle").value       = book.title;
@@ -52,11 +65,9 @@ async function loadBook() {
     document.getElementById("bookIsbn").value        = book.isbn || "";
     document.getElementById("bookDescription").value = book.description || "";
 
-    // Set current cover as preview
     const preview = document.getElementById("cover-preview");
     preview.src = book.cover || "imgs/book1.png";
 
-    // Set genre dropdown
     const genreSelect = document.getElementById("bookGenre");
     for (let option of genreSelect.options) {
       if (option.value === book.genre) {
@@ -73,7 +84,7 @@ async function loadBook() {
 
 loadBook();
 
-// Preview new cover if uploaded
+// ─── Preview new cover if uploaded ───────────────────────────────────────────
 document.getElementById("bookCover").addEventListener("change", function () {
   const file = this.files[0];
   if (!file) return;
@@ -84,7 +95,7 @@ document.getElementById("bookCover").addEventListener("change", function () {
   reader.readAsDataURL(file);
 });
 
-// Save changes
+// ─── Save changes ─────────────────────────────────────────────────────────────
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -101,7 +112,6 @@ form.addEventListener("submit", async (e) => {
     return;
   }
 
-  // If a new cover was uploaded, convert to base64 then PUT
   if (file) {
     const reader = new FileReader();
     reader.onload = async (e) => {
@@ -115,16 +125,19 @@ form.addEventListener("submit", async (e) => {
 
 async function submitUpdateBook(updatedData) {
   try {
-    const response = await fetch(`${API_BASE}/api/books/${bookId}/update/`, {
+    const response = await fetch(`/api/books/${bookId}/update/`, {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": getCSRFToken(),
+      },
       body: JSON.stringify(updatedData),
     });
 
     if (!response.ok) throw new Error("Failed to update book");
 
     alert(`"${updatedData.title}" updated successfully!`);
-    window.location.href = "/books-management/";
+    window.location.href = "/Books-Management/";
   } catch (error) {
     console.error("Error updating book:", error);
     alert("Failed to update book. Please try again.");
