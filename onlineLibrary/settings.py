@@ -118,3 +118,15 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
+# 1. Turn off debug mode
+DEBUG = False
+
+# 2. Add your deployment domain
+ALLOWED_HOSTS = ['yourusername.pythonanywhere.com']
+
+# 3. Set a real SECRET_KEY (use environment variable)
+SECRET_KEY = os.environ.get('SECRET_KEY', 'your-fallback-key')
+
+# 4. Configure static files
+STATIC_ROOT = BASE_DIR / 'staticfiles'
