@@ -182,3 +182,94 @@ footer {
     color: var(--text-light);
     border-top: 1px solid #eee;
 }
+
+/* ─── Responsive ─────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+    nav {
+        padding: 16px 5%;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    nav ul {
+        gap: 16px;
+    }
+
+    .container {
+        margin: 30px 16px;
+        padding: 28px 20px;
+        overflow-x: auto;
+    }
+
+    table {
+        min-width: 500px;
+    }
+
+    th, td {
+        padding: 12px;
+    }
+
+    h2 {
+        font-size: 2.2rem;
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    nav {
+        padding: 14px 16px;
+    }
+
+    nav .logo {
+        font-size: 1.2rem;
+    }
+
+    nav ul {
+        gap: 12px;
+    }
+
+    nav ul li a {
+        font-size: 0.85rem;
+    }
+
+    .container {
+        margin: 16px 10px;
+        padding: 20px 14px;
+    }
+
+    h2 {
+        font-size: 1.7rem;
+    }
+
+    table {
+        min-width: 400px;
+    }
+
+    th, td {
+        padding: 10px 8px;
+        font-size: 0.82rem;
+    }
+
+    .btn {
+        padding: 6px 12px;
+        font-size: 0.78rem;
+    }
+
+    form {
+        gap: 14px;
+    }
+
+    input, select, textarea {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+
+    .submit-btn {
+        padding: 13px;
+    }
+
+    footer {
+        padding: 20px 16px;
+    }
+}

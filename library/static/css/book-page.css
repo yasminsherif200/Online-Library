@@ -272,3 +272,114 @@ footer {
     border-top: 1px solid #eee;
     margin-top: 80px;
 }
+
+/* ─── Responsive ─────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+    nav {
+        padding: 16px 5%;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    nav ul {
+        gap: 16px;
+    }
+
+    nav ul li a {
+        font-size: 0.85rem;
+    }
+
+    .main-container {
+        margin: 30px auto;
+    }
+
+    .book-layout {
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .book-cover-side {
+        flex: unset;
+        width: 100%;
+        position: static;
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 24px;
+    }
+
+    .book-cover-side img {
+        width: 160px;
+        height: 220px;
+        flex-shrink: 0;
+    }
+
+    .main-title {
+        font-size: 2rem;
+    }
+
+    .meta-row {
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    nav {
+        padding: 14px 16px;
+    }
+
+    nav .logo {
+        font-size: 1.2rem;
+    }
+
+    nav ul {
+        gap: 12px;
+    }
+
+    .book-cover-side {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .book-cover-side img {
+        width: 100%;
+        max-width: 240px;
+        height: 300px;
+    }
+
+    .main-title {
+        font-size: 1.6rem;
+    }
+
+    .author {
+        font-size: 1rem;
+        margin-bottom: 20px;
+    }
+
+    .meta-row {
+        gap: 16px;
+    }
+
+    .description {
+        font-size: 0.88rem;
+        max-width: 100%;
+    }
+
+    .action-area {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .borrow-btn {
+        width: 100%;
+        text-align: center;
+        padding: 14px 20px;
+    }
+
+    footer {
+        margin-top: 40px;
+        padding: 20px;
+    }
+}

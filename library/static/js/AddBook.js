@@ -1,3 +1,17 @@
+const hamburgerBtn = document.getElementById('hamburgerBtn');
+const sidebar = document.querySelector('.sidebar');
+const overlay = document.querySelector('.overlay');
+
+hamburgerBtn.addEventListener('click', () => {
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('show');
+});
+
+overlay.addEventListener('click', () => {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('show');
+});
+
 function getCookie(name) {
   let cookieValue = null;
   if (document.cookie && document.cookie !== "") {

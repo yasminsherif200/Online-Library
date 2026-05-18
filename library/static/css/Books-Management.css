@@ -485,3 +485,153 @@ td {
     color: #aaa;
     padding: 30px;
 }
+
+/* ─── Responsive ─────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+    .iconbar {
+        display: none;
+    }
+
+    .sidebar {
+        left: -240px;
+        width: 240px;
+    }
+
+    .sidebar.open {
+        left: 0;
+    }
+
+    .topnav {
+        padding: 0 16px;
+    }
+
+    .topnav-hamburger {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        background: none;
+        border: none;
+        font-size: 1.2rem;
+        cursor: pointer;
+        color: #1a1a1a;
+        border-radius: 8px;
+        transition: background 0.2s;
+    }
+
+    .topnav-hamburger:hover {
+        background: #f5f5f5;
+    }
+
+    .main {
+        padding: 24px 20px;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+    }
+
+    .table-toolbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .btn-register {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .table-card {
+        overflow-x: auto;
+    }
+
+    table {
+        min-width: 600px;
+    }
+
+    thead th,
+    td {
+        padding: 10px 14px;
+    }
+
+    .actions-cell {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+}
+
+@media (max-width: 480px) {
+    .topnav {
+        padding: 0 12px;
+        height: 56px;
+    }
+
+    .topnav-left h2 {
+        font-size: 1.2rem;
+    }
+
+    .topnav-right {
+        gap: 12px;
+    }
+
+    .sidebar {
+        width: 100%;
+        left: -100%;
+    }
+
+    .sidebar.open {
+        left: 0;
+    }
+
+    .main {
+        padding: 16px;
+    }
+
+    .page-title h1 {
+        font-size: 1.4rem;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .stat-card {
+        padding: 16px;
+        gap: 12px;
+    }
+
+    .stat-icon {
+        width: 38px;
+        height: 38px;
+        font-size: 1rem;
+    }
+
+    .stat-info h3 {
+        font-size: 1.4rem;
+    }
+
+    table {
+        min-width: 500px;
+    }
+
+    .btn {
+        padding: 6px 10px;
+        font-size: 0.72rem;
+    }
+
+    .footer {
+        font-size: 0.65rem;
+        padding: 14px;
+    }
+}
+
+@media (min-width: 769px) {
+    .topnav-hamburger {
+        display: none;
+    }
+}

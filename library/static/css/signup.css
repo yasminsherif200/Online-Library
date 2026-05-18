@@ -222,3 +222,105 @@ footer {
     font-size: 24px;
     padding: 10px;
 }
+
+
+/* ─── Responsive ─────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+    nav {
+        padding: 14px 16px;
+    }
+
+    .nav-links a {
+        font-size: 16px;
+        padding: 8px;
+    }
+
+    main {
+        padding-top: 64px;
+    }
+
+    section {
+        min-height: auto;
+        padding: 20px 0;
+    }
+
+    .sign-up-form {
+        width: 100%;
+        max-width: 560px;
+        margin: 20px;
+        padding: 36px;
+    }
+
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+        width: 100%;
+    }
+
+    .field input {
+        min-width: unset;
+        width: 100%;
+    }
+
+    .sign-up-btn {
+        min-width: unset;
+        width: 100%;
+    }
+
+    footer {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .footer-servcies {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    nav {
+        padding: 12px 14px;
+    }
+
+    .logo {
+        font-size: 18px;
+    }
+
+    .nav-links a {
+        font-size: 14px;
+        padding: 5px;
+    }
+
+    .sign-up-form {
+        width: 100%;
+        margin: 10px;
+        padding: 24px 18px;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    h1 {
+        font-size: 1.4rem;
+    }
+
+    .sign-up-btn {
+        min-width: unset;
+        width: 100%;
+        font-size: 13px;
+    }
+
+    footer {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .footer-servcies {
+        flex-direction: column;
+        align-items: center;
+    }
+}
