@@ -60,7 +60,13 @@ async function loadBooks() {
       tr.innerHTML = `
         <td class="book-info">
           <img src="${book.cover || ""}" class="book-cover" onerror="this.style.display='none'">
-          <strong>${book.title}</strong>
+          <a href="/book/${book.id}/" style="text-decoration:none; color:inherit; cursor:pointer;">
+            <strong style="transition:color 0.2s;"
+              onmouseover="this.style.color='#b08d57'" 
+              onmouseout="this.style.color='inherit'">
+              ${book.title}
+            </strong>
+          </a>
         </td>
         <td>${book.author}</td>
         <td><span class="tag">${book.genre}</span></td>

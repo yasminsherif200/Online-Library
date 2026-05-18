@@ -66,6 +66,10 @@ def borrowedbooks_page(request):
 def bookdetails_page(request):
     return render(request, 'library/BookDetails.html')
 
+@user_required
+def book_page(request, book_id):
+    return render(request, 'library/book-page.html')
+
 # admin-only pages
 
 @admin_required

@@ -30,6 +30,7 @@ urlpatterns = [
     path('api/books/<str:book_id>/delete/', views.delete_book, name='delete_book'),
     path('api/books/<str:book_id>/', views.book_detail, name='book_detail'),
     path('api/books/', views.books_list, name='book_list'),
+    path('book/<int:book_id>/', views.book_page, name='book_page'),
 
     # Borrows urls
     path('api/borrows/', views.borrow_book, name='borrow_book'),

@@ -1,0 +1,91 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <title>Book Details | The Digital Archivist</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/book-page.css' %}">
+</head>
+<body>
+
+    <nav>
+        <div class="logo">The Digital Archivist</div>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/BookDetails/" class="active">Books</a></li>
+            <li><a href="/Search-Books/">Search</a></li>
+            <li><a href="/BorrowedBooks/">My Library</a></li>
+            <li><a href="/User-Dashboard/">Dashboard</a></li>
+            <li><a href="#" id="logout-btn">Logout</a></li>
+        </ul>
+    </nav>
+
+    <div class="main-container">
+
+        <div id="not-found-msg" class="not-found hidden">
+            <p>Book not found. <a href="/BookDetails/">← Back to Books</a></p>
+        </div>
+
+        <div id="book-content" class="hidden">
+
+            <div class="breadcrumb">
+                <a href="/BookDetails/">Books</a>
+                <span>→</span>
+                <span id="breadcrumb-title">...</span>
+            </div>
+
+            <div class="book-layout">
+
+                <!-- Left: Cover -->
+                <div class="book-cover-side">
+                    <img id="book-cover" src="" alt="Book Cover" />
+                    <div id="status-badge" class="status-badge"></div>
+                </div>
+
+                <!-- Right: Details -->
+                <div class="book-details-side">
+                    <p class="section-label">THE DIGITAL ARCHIVIST</p>
+                    <h1 id="book-title" class="main-title"></h1>
+                    <p id="book-author" class="author"></p>
+
+                    <div class="meta-row">
+                        <div class="meta-item">
+                            <span class="meta-label">GENRE</span>
+                            <span id="book-genre" class="tag"></span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">ISBN</span>
+                            <span id="book-isbn" class="meta-value"></span>
+                        </div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <p class="desc-label">ABOUT THIS VOLUME</p>
+                    <p id="book-description" class="description"></p>
+
+                    <div class="divider"></div>
+
+                    <div class="action-area">
+                        <button id="borrow-btn" class="borrow-btn">
+                            Borrow this Book
+                        </button>
+                        <a href="/BookDetails/" class="back-link">← Back to Collection</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>The Digital Archivist © 2024. CURATING HISTORY FOR THE MODERN ERA. | PRIVACY POLICY | TERMS OF SERVICE | CONTACT</p>
+    </footer>
+
+    <script src="{% static 'js/storage.js' %}"></script>
+    <script src="{% static 'js/book-page.js' %}"></script>
+</body>
+</html>
